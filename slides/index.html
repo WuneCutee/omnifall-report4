@@ -80,10 +80,30 @@ tr.dim td{color:var(--muted)}
 .slide.on .sun{view-transition-name:sun}
 .slide.on .dunes{view-transition-name:dunes}
 /* morph: shared boxes glide/resize to their new place, contents cross-fade */
-::view-transition-group(*){animation-duration:.7s;animation-timing-function:cubic-bezier(.65,0,.35,1)}
+::view-transition-group(*){animation-duration:.85s;animation-timing-function:cubic-bezier(.77,0,.18,1)}
 ::view-transition-image-pair(*){overflow:hidden;border-radius:6px}
-::view-transition-old(*),::view-transition-new(*){height:100%;width:100%;object-fit:none;object-position:left top;animation-duration:.7s;animation-timing-function:cubic-bezier(.65,0,.35,1)}
-::view-transition-old(root),::view-transition-new(root){animation-duration:.5s;object-fit:fill}
+::view-transition-old(*),::view-transition-new(*){height:100%;width:100%;object-fit:none;object-position:left top;animation-duration:.85s;animation-timing-function:cubic-bezier(.77,0,.18,1)}
+/* cascade: boxes leave one after another */
+::view-transition-group(m1){animation-delay:.04s}::view-transition-group(m2){animation-delay:.08s}::view-transition-group(m3){animation-delay:.12s}
+::view-transition-group(m4){animation-delay:.16s}::view-transition-group(m5){animation-delay:.2s}::view-transition-group(m6){animation-delay:.24s}::view-transition-group(m7){animation-delay:.28s}
+::view-transition-group(m1),::view-transition-group(m2),::view-transition-group(m3),::view-transition-group(m4),::view-transition-group(m5),::view-transition-group(m6),::view-transition-group(m7){animation-fill-mode:both}
+::view-transition-new(m0),::view-transition-new(m1),::view-transition-new(m2),::view-transition-new(m3),::view-transition-new(m4),::view-transition-new(m5),::view-transition-new(m6),::view-transition-new(m7){animation:.6s .25s cubic-bezier(0,0,.2,1) both inFade}
+::view-transition-old(m0),::view-transition-old(m1),::view-transition-old(m2),::view-transition-old(m3),::view-transition-old(m4),::view-transition-old(m5),::view-transition-old(m6),::view-transition-old(m7){animation:.3s ease-in both outFade}
+@keyframes inFade{from{opacity:0;transform:translateY(10px)}}
+@keyframes outFade{to{opacity:0}}
+/* title: letters slide up like a curtain */
+::view-transition-old(title){animation:.35s cubic-bezier(.5,0,.75,0) both titleOut}
+::view-transition-new(title){animation:.7s .15s cubic-bezier(.16,1,.3,1) both titleIn}
+@keyframes titleOut{to{opacity:0;transform:translateY(-30px)}}
+@keyframes titleIn{from{opacity:0;transform:translateY(40px);clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+/* page: old sinks back, new sweeps in as a sand-coloured curtain from the travel side */
+::view-transition-old(root){animation:.85s cubic-bezier(.77,0,.18,1) both pageOut}
+::view-transition-new(root){animation:.85s cubic-bezier(.77,0,.18,1) both pageIn}
+html[data-dir=prev]::view-transition-new(root){animation-name:pageInBack}
+@keyframes pageOut{to{transform:scale(.94);opacity:.25}}
+@keyframes pageIn{from{clip-path:circle(0% at 100% 100%)}to{clip-path:circle(150% at 100% 100%)}}
+@keyframes pageInBack{from{clip-path:circle(0% at 0% 100%)}to{clip-path:circle(150% at 0% 100%)}}
+html::view-transition{background:#2a1f17}
 /* entrances only for pieces inside boxes */
 .slide.on .stop,.slide.on tbody tr,.slide.on ol li,.slide.on .tag,.slide.on .lead{animation:rise .5s cubic-bezier(0,0,.2,1) both;animation-delay:calc(min(var(--i,0),8) * 40ms + 350ms)}
 @keyframes rise{from{opacity:0;transform:translate3d(0,18px,0)}}
@@ -440,8 +460,8 @@ tr.dim td{color:var(--muted)}
     (function f(now){const p=Math.min(1,(now-t0)/1100),e=1-Math.pow(1-p,3);el.textContent=(v*e).toFixed(d);if(p<1)requestAnimationFrame(f);else el.textContent=t;})(t0);});}
   function apply(n){i=n;S.forEach((s,k)=>s.classList.toggle('on',k===i));pg.textContent=(i+1)+' / '+S.length;history.replaceState(null,'','#slide-'+(i+1));countUp(S[i]);}
   let busy=0;function show(n){if(busy)return;n=Math.max(0,Math.min(S.length-1,n));if(n===i&&S[i].classList.contains('on'))return;
-    document.documentElement.style.setProperty('--dir',n>i?'-60px':'60px');
-    if(document.startViewTransition&&!reduce){busy=1;const t=document.startViewTransition(()=>apply(n));const r=()=>busy=0;t.finished.then(r,r);setTimeout(r,900);}else apply(n);}
+    document.documentElement.dataset.dir=n>i?'next':'prev';
+    if(document.startViewTransition&&!reduce){busy=1;const t=document.startViewTransition(()=>apply(n));const r=()=>busy=0;t.finished.then(r,r);setTimeout(r,1150);}else apply(n);}
   addEventListener('hashchange',()=>{const m=location.hash.match(/\d+/);if(m)show(+m[0]-1);});
   function fit(){const k=Math.min(innerWidth/1920,innerHeight/1080);st.style.transform='scale('+k+')';}
   addEventListener("resize",fit);fit();apply(i);
