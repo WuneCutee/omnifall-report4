@@ -1,212 +1,313 @@
 <!doctype html>
-<html lang="vi">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></head><body>
 <title>Report 4 · OmniFall</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lexend:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-:root{
-  --sand:#efe4d0; --paper:#f7efe1; --ink:#2b2118; --muted:#7a6650; --line:#d6c3a5;
-  --clay:#b5532f; --rust:#8c3b22; --ochre:#c98a2b; --sage:#6f7b55; --indigo:#2f3e55; --wool:#e8d6b8;
-  --f-d:"Lora",Georgia,serif; --f-b:"Be Vietnam Pro",system-ui,sans-serif; --f-m:"JetBrains Mono",ui-monospace,monospace;
+/* Layout: mission-control telemetry in deep space — 1600x900 stage scaled to fit over a live starfield;
+   glass panels carry the evidence, a nebula tints each section, the foot scrubber reads as an orbit track. */
+:root {
+  --space: #04060E;        /* deep space */
+  --space-2: #0A1026;
+  --ink: #E9EFFB;          /* starlight */
+  --muted: #95A6C4;
+  --line: rgba(150, 182, 235, .18);
+  --glass: rgba(16, 24, 52, .58);
+  --glass-hi: rgba(28, 42, 88, .62);
+  --teal: #5EEAD4;         /* normal / our system: cyan aurora */
+  --blue: #8AB4FF;         /* fine-tuned classifier */
+  --violet: #A78BFA;       /* nebula */
+  --amber: #FBBF4A;        /* class: fall — solar flare */
+  --red: #FF7A7A;          /* class: fallen / alarm */
+  --grey: #74839F;         /* baseline */
+  --panel: var(--glass);
+  --night-ink: var(--ink); --night-muted: var(--muted);
+  --f-display: "Lexend", "Be Vietnam Pro", "Segoe UI", sans-serif;
+  --f-body: "Be Vietnam Pro", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", "Consolas", "SFMono-Regular", monospace;
+  color-scheme: dark;
 }
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;background:#2a1f17;overflow:hidden}
-.viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-.stage{width:1920px;height:1080px;position:relative;transform-origin:center;flex:none}
-.slide{position:absolute;inset:0;display:none;flex-direction:column;gap:26px;padding:84px 120px 130px;
-  background:var(--paper);color:var(--ink);font:26px/1.5 var(--f-b);overflow:hidden;
-  background-image:radial-gradient(rgba(140,59,34,.05) 1px,transparent 1.4px),radial-gradient(rgba(47,62,85,.04) 1px,transparent 1.4px);
-  background-size:22px 22px,31px 31px;background-position:0 0,11px 7px}
-.slide.on{display:flex}
-.slide::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;
-  background:
-   linear-gradient(135deg,var(--clay) 25%,transparent 25%) -23px 0/46px 46px,
-   linear-gradient(225deg,var(--clay) 25%,transparent 25%) -23px 0/46px 46px,
-   linear-gradient(315deg,var(--indigo) 25%,transparent 25%) 0 0/46px 46px,
-   linear-gradient(45deg,var(--indigo) 25%,transparent 25%) 0 0/46px 46px,
-   var(--ochre)}
-.slide::before{content:"";position:absolute;left:0;right:0;bottom:46px;height:8px;background:repeating-linear-gradient(90deg,var(--rust) 0 18px,var(--wool) 18px 26px)}
-.foot{position:absolute;left:120px;right:260px;bottom:70px;display:flex;justify-content:space-between;font:500 17px var(--f-b);color:var(--muted);letter-spacing:.06em}
-.chap{font:600 18px var(--f-b);letter-spacing:.2em;text-transform:uppercase;color:var(--clay);display:flex;align-items:center;gap:14px}
-.chap::before{content:"";width:34px;height:12px;background:linear-gradient(135deg,var(--clay) 50%,var(--ochre) 50%);clip-path:polygon(0 50%,25% 0,50% 50%,75% 0,100% 50%,75% 100%,50% 50%,25% 100%)}
-h1,h2,h3{font-family:var(--f-d);margin:0;line-height:1.15;text-wrap:balance}
-h1{font-size:84px;font-weight:700}
-h2{font-size:54px;font-weight:600;max-width:1600px}
-h3{font-size:30px;font-weight:600}
-p{margin:0}
-.lead{font-size:30px;color:var(--muted);max-width:1400px}
-.row{display:grid;gap:28px;flex:1;min-height:0}
-.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:repeat(3,1fr)}.c4{grid-template-columns:repeat(4,1fr)}.c64{grid-template-columns:1.5fr 1fr}.c46{grid-template-columns:1fr 1.5fr}
-.card{background:#fbf6ec;border:2px solid var(--line);border-radius:6px;padding:26px 30px;position:relative;min-width:0;display:flex;flex-direction:column;gap:12px}
-.card.st{border-top:10px solid var(--clay)}.card.sg{border-top:10px solid var(--sage)}.card.oc{border-top:10px solid var(--ochre)}.card.in{border-top:10px solid var(--indigo)}
-.k{font:600 16px var(--f-b);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.num{font:700 92px/1 var(--f-d);color:var(--rust);font-variant-numeric:tabular-nums}
-.num.s{font-size:56px}
-.up{font:600 22px var(--f-m);color:var(--sage)}
-.small{font-size:22px;color:var(--muted)}
-ul{margin:0;padding-left:30px}ul li{margin-bottom:8px}
-li::marker{color:var(--clay)}
-table{border-collapse:collapse;width:100%;font-size:23px}
-th{font:600 15px var(--f-b);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 14px;border-bottom:3px double var(--rust)}
-td{padding:9px 14px;border-bottom:1px solid var(--line)}
-td.n,th.n{text-align:right;font-family:var(--f-m);font-size:21px}
-tr.hl td{background:#f1dcc4;font-weight:600;color:var(--rust)}
-tr.dim td{color:var(--muted)}
-.fig{background:#fff;border:2px solid var(--line);padding:12px;border-radius:4px;display:flex;flex-direction:column;min-height:0;min-width:0}
-.fig img{width:100%;height:100%;object-fit:contain;min-height:0;flex:1}
-.cap{font-size:18px;color:var(--muted);margin-top:8px}
-.eq{font:500 30px var(--f-d);font-style:italic;background:#f3e7d3;border-left:6px solid var(--ochre);padding:16px 24px}
-.route{display:flex;align-items:flex-start;margin-top:30px}
-.stop{flex:1;text-align:center;position:relative}
-.stop::before{content:"";position:absolute;top:28px;left:0;right:0;border-top:4px dashed var(--ochre)}
-.stop:first-child::before{left:50%}.stop:last-child::before{right:50%}
-.stop b{position:relative;display:inline-flex;width:60px;height:60px;border-radius:50%;background:var(--clay);color:var(--paper);align-items:center;justify-content:center;font:700 28px var(--f-d);border:5px solid var(--paper);box-shadow:0 0 0 3px var(--clay)}
-.stop span{display:block;margin-top:14px;font-size:22px;font-weight:600}
-.stop em{display:block;font-style:normal;font-size:18px;color:var(--muted)}
-.cover{background-color:var(--indigo);color:var(--sand)}
-.cover h1{color:#fbf1df}.cover .lead{color:#d9c7a8}.cover .chap{color:var(--ochre)}
-.sun{position:absolute;right:150px;top:120px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,var(--ochre) 0 45%,transparent 46%),repeating-conic-gradient(var(--ochre) 0 4deg,transparent 4deg 15deg);opacity:.85;-webkit-mask:radial-gradient(circle,#000 0 70%,transparent 71%);mask:radial-gradient(circle,#000 0 70%,transparent 71%)}
-.dunes{position:absolute;left:0;right:0;bottom:54px;height:260px;width:100%}
-.nav{position:fixed;right:20px;bottom:16px;display:flex;gap:8px;z-index:5}
-.nav button{width:46px;height:46px;border-radius:50%;border:2px solid var(--ochre);background:rgba(43,33,24,.7);color:var(--sand);font-size:24px;cursor:pointer}
-.pg{position:fixed;left:20px;bottom:24px;color:#d9c7a8;font:500 14px var(--f-m);z-index:5}
-/* morph between slides (View Transitions) */
-.slide.on h2,.slide.on h1{view-transition-name:title}
-.slide.on .chap{view-transition-name:chap}
-.slide.on .foot{view-transition-name:foot}
-.slide.on .sun{view-transition-name:sun}
-.slide.on .dunes{view-transition-name:dunes}
-/* morph: shared boxes glide/resize to their new place, contents cross-fade */
-::view-transition-group(*){animation-duration:.85s;animation-timing-function:cubic-bezier(.77,0,.18,1)}
-::view-transition-image-pair(*){overflow:hidden;border-radius:6px}
-::view-transition-old(*),::view-transition-new(*){height:100%;width:100%;object-fit:none;object-position:left top;animation-duration:.85s;animation-timing-function:cubic-bezier(.77,0,.18,1)}
-/* cascade: boxes leave one after another */
-::view-transition-group(m1){animation-delay:.04s}::view-transition-group(m2){animation-delay:.08s}::view-transition-group(m3){animation-delay:.12s}
-::view-transition-group(m4){animation-delay:.16s}::view-transition-group(m5){animation-delay:.2s}::view-transition-group(m6){animation-delay:.24s}::view-transition-group(m7){animation-delay:.28s}
-::view-transition-group(m1),::view-transition-group(m2),::view-transition-group(m3),::view-transition-group(m4),::view-transition-group(m5),::view-transition-group(m6),::view-transition-group(m7){animation-fill-mode:both}
-::view-transition-new(m0),::view-transition-new(m1),::view-transition-new(m2),::view-transition-new(m3),::view-transition-new(m4),::view-transition-new(m5),::view-transition-new(m6),::view-transition-new(m7){animation:.6s .25s cubic-bezier(0,0,.2,1) both inFade}
-::view-transition-old(m0),::view-transition-old(m1),::view-transition-old(m2),::view-transition-old(m3),::view-transition-old(m4),::view-transition-old(m5),::view-transition-old(m6),::view-transition-old(m7){animation:.3s ease-in both outFade}
-@keyframes inFade{from{opacity:0;transform:translateY(10px)}}
-@keyframes outFade{to{opacity:0}}
-/* title: letters slide up like a curtain */
-::view-transition-old(title){animation:.35s cubic-bezier(.5,0,.75,0) both titleOut}
-::view-transition-new(title){animation:.7s .15s cubic-bezier(.16,1,.3,1) both titleIn}
-@keyframes titleOut{to{opacity:0;transform:translateY(-30px)}}
-@keyframes titleIn{from{opacity:0;transform:translateY(40px);clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
-/* page: old sinks back, new sweeps in as a sand-coloured curtain from the travel side */
-::view-transition-old(root){animation:.85s cubic-bezier(.77,0,.18,1) both pageOut}
-::view-transition-new(root){animation:.85s cubic-bezier(.77,0,.18,1) both pageIn}
-html[data-dir=prev]::view-transition-new(root){animation-name:pageInBack}
-@keyframes pageOut{to{transform:scale(.94);opacity:.25}}
-@keyframes pageIn{from{clip-path:circle(0% at 100% 100%)}to{clip-path:circle(150% at 100% 100%)}}
-@keyframes pageInBack{from{clip-path:circle(0% at 0% 100%)}to{clip-path:circle(150% at 0% 100%)}}
-html::view-transition{background:#2a1f17}
-/* entrances only for pieces inside boxes */
-.slide.on .stop,.slide.on tbody tr,.slide.on ol li,.slide.on .tag,.slide.on .lead{animation:rise .5s cubic-bezier(0,0,.2,1) both;animation-delay:calc(min(var(--i,0),8) * 40ms + 350ms)}
-@keyframes rise{from{opacity:0;transform:translate3d(0,18px,0)}}
-.slide.on .stop::before{animation:draw 1.4s .3s ease both;transform-origin:left}
-@keyframes draw{from{transform:scaleX(0)}}
-.slide.on .stop b{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i,0) * 140ms + 400ms)}
-@keyframes pop{from{transform:scale(0)}}
-.slide.on tr.hl td{animation:glow 2.4s 1.2s ease-in-out 2}
-@keyframes glow{50%{background:#eabf94}}
-.sun{animation:spin 60s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.slide.on .dunes path:first-child{animation:drift 9s ease-in-out infinite alternate}
-@keyframes drift{to{transform:translate3d(-40px,0,0)}}
-.sun{will-change:transform}
-.card{transition:transform .25s}
-.card:hover{transform:translate3d(0,-4px,0)}
-@media (prefers-reduced-motion:reduce){*,::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important;transition:none!important}}
-.tag{display:inline-block;background:var(--wool);border:1px solid var(--line);padding:4px 12px;border-radius:30px;font-size:19px;margin:0 6px 8px 0}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; color: var(--ink); font-family: var(--f-body); overflow: hidden;
+  background: radial-gradient(1200px 800px at 70% 20%, #0D1640 0%, var(--space) 60%) fixed, var(--space);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
+.viewport { position: fixed; inset: 0; display: grid; place-items: center; z-index: 1; }
+.stage { width: 1600px; height: 900px; position: relative; transform-origin: center center; flex: none; }
+
+/* nebula per section: two soft clouds whose hue follows the part of the talk */
+.stage::before, .stage::after { content: ""; position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none; transition: background 1.2s ease, transform 1.6s ease; z-index: 0; }
+.stage::before { width: 760px; height: 520px; right: -120px; top: -140px; background: radial-gradient(closest-side, rgba(167,139,250,.30), transparent); }
+.stage::after { width: 680px; height: 480px; left: -160px; bottom: -180px; background: radial-gradient(closest-side, rgba(94,234,212,.20), transparent); }
+.stage[data-neb="1"]::before { background: radial-gradient(closest-side, rgba(94,234,212,.26), transparent); transform: translate(-80px, 40px); }
+.stage[data-neb="1"]::after { background: radial-gradient(closest-side, rgba(138,180,255,.24), transparent); }
+.stage[data-neb="2"]::before { background: radial-gradient(closest-side, rgba(138,180,255,.30), transparent); transform: translate(-200px, 20px); }
+.stage[data-neb="2"]::after { background: radial-gradient(closest-side, rgba(167,139,250,.24), transparent); }
+.stage[data-neb="3"]::before { background: radial-gradient(closest-side, rgba(251,191,74,.20), transparent); }
+.stage[data-neb="3"]::after { background: radial-gradient(closest-side, rgba(255,122,122,.18), transparent); transform: translate(120px, -40px); }
+.stage[data-neb="4"]::before { background: radial-gradient(closest-side, rgba(167,139,250,.34), transparent); transform: translate(-40px, 60px); }
+.stage[data-neb="4"]::after { background: radial-gradient(closest-side, rgba(94,234,212,.26), transparent); }
+
+.slide { position: absolute; inset: 0; padding: 72px 96px 120px; display: none; flex-direction: column; gap: 28px; overflow: hidden; z-index: 1; }
+.slide.active { display: flex; }
+.eyebrow { font-family: var(--f-body); font-weight: 600; font-size: 17px; letter-spacing: .16em; text-transform: uppercase; color: var(--teal); display: flex; gap: 18px; align-items: center; }
+.eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px var(--teal), 0 0 24px rgba(94,234,212,.5); }
+.eyebrow .tc { display: none; }
+.eyebrow .tc::before { content: "T+"; }
+.cover .eyebrow .tc::before { content: none; }
+h1, h2 { font-family: var(--f-display); font-weight: 600; margin: 0; text-wrap: balance; letter-spacing: -0.02em; line-height: 1.12; }
+h1 { font-size: 88px; line-height: 1.04; }
+h2 { font-size: 54px; line-height: 1.1; max-width: 1320px; text-shadow: 0 0 28px rgba(138,180,255,.18); }
+.lead { font-size: 27px; line-height: 1.45; color: var(--muted); max-width: 1180px; margin: 0; }
+p { margin: 0; }
+.grid { display: grid; gap: 36px; flex: 1; min-height: 0; }
+.g2 { grid-template-columns: 1fr 1fr; }
+.g-62 { grid-template-columns: 1.55fr 1fr; }
+.g-26 { grid-template-columns: 1fr 1.55fr; }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.g4 { grid-template-columns: repeat(4, 1fr); }
+.col { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.panel {
+  background: linear-gradient(160deg, var(--glass-hi), var(--glass)); border: 1px solid var(--line); border-radius: 16px;
+  padding: 26px 30px; min-width: 0; position: relative; backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 18px 40px rgba(0,0,0,.35);
+}
+.panel::after { content: ""; position: absolute; top: -1px; left: 24px; right: 24px; height: 1px; background: linear-gradient(90deg, transparent, rgba(94,234,212,.7), transparent); }
+.kicker { font-family: var(--f-body); font-weight: 600; font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.big, .mid { font-family: var(--f-display); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.big { font-size: 88px; } .mid { font-size: 54px; }
+.big, .mid { text-shadow: 0 0 22px currentColor; }
+.body { font-size: 23px; line-height: 1.45; }
+.small { font-size: 19px; line-height: 1.45; color: var(--muted); }
+.mono { font-family: var(--f-mono); }
+b { color: #FFFFFF; }
+ul.clean { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+ul.clean li { font-size: 23px; line-height: 1.42; padding-left: 30px; position: relative; }
+ul.clean li::before { content: ""; position: absolute; left: 4px; top: 13px; width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 10px var(--teal); }
+.t-fall { color: var(--amber); } .t-fallen { color: var(--red); } .t-teal { color: var(--teal); } .t-blue { color: var(--blue); }
+table.data { border-collapse: collapse; width: 100%; font-size: 20px; font-variant-numeric: tabular-nums; }
+table.data th { text-align: left; font-family: var(--f-body); font-weight: 600; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 400; padding: 0 12px 10px 0; border-bottom: 1.5px solid rgba(233,239,251,.55); }
+table.data td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.data td.n, table.data th.n { text-align: right; }
+table.data tr.hl td { font-weight: 600; color: var(--teal); text-shadow: 0 0 12px rgba(94,234,212,.4); }
+svg text { font-family: var(--f-body); }
+.chart { width: 100%; height: 100%; min-height: 0; }
+.chart svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.note { font-size: 17px; color: var(--muted); line-height: 1.4; }
+
+/* pipeline */
+.pipe { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; flex: 1; min-height: 0; }
+.stagecol { background: linear-gradient(160deg, var(--glass-hi), var(--glass)); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; position: relative; min-width: 0; backdrop-filter: blur(6px); }
+.stagecol h3 { margin: 0; font-family: var(--f-display); font-size: 25px; font-weight: 700; }
+.stagecol .kicker { font-size: 14px; color: var(--teal); }
+.step { display: grid; grid-template-columns: 30px 1fr; gap: 8px; align-items: start; padding: 7px 0; border-top: 1px solid var(--line); }
+.step b { font-family: var(--f-mono); font-size: 16px; color: var(--teal); padding-top: 3px; text-shadow: 0 0 8px rgba(94,234,212,.6); }
+.step span { font-size: 17px; line-height: 1.3; }
+.step em { display: block; font-style: normal; font-family: var(--f-mono); font-size: 13.5px; color: var(--amber); margin-top: 3px; line-height: 1.3; }
+.stagecol:not(:last-child)::after { content: ""; position: absolute; right: -17px; top: 50%; width: 12px; height: 12px; border-top: 2px solid var(--teal); border-right: 2px solid var(--teal); transform: translateY(-50%) rotate(45deg); filter: drop-shadow(0 0 4px var(--teal)); }
+
+/* crop illustration */
+.frame { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16 / 9; max-width: 100%; box-shadow: 0 0 0 1px rgba(94,234,212,.15), 0 20px 50px rgba(0,0,0,.5); }
+.frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.crop { position: absolute; top: 0; bottom: 0; border: 3px solid; border-radius: 4px; box-shadow: 0 0 18px rgba(94,234,212,.55); }
+.crop span { position: absolute; left: 8px; top: 8px; font-family: var(--f-mono); font-size: 15px; padding: 3px 8px; border-radius: 4px; color: #04060E; }
+.shade { position: absolute; top: 0; bottom: 0; background: rgba(4, 6, 14, .66); }
+.cropbars { position: relative; height: 44px; max-width: 740px; }
+.cropbars div { position: absolute; top: 0; height: 18px; border: 2px solid var(--amber); border-top: none; border-radius: 0 0 6px 6px; }
+.cropbars span { position: absolute; left: 50%; transform: translateX(-50%); top: 1px; font-family: var(--f-mono); font-size: 13px; color: var(--amber); background: var(--space); padding: 0 6px; white-space: nowrap; }
+
+/* cover: planet, rings, orbits */
+.cover h1 { max-width: 1150px; margin-top: 36px; }
+.cover h1 .glint {
+  background: linear-gradient(100deg, #FF9A8B 0%, #FFD3A5 40%, #FFFFFF 50%, #FFD3A5 60%, #FF9A8B 100%);
+  background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.planet { position: absolute; right: -240px; bottom: -330px; width: 820px; height: 820px; border-radius: 50%; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle at 30% 28%, #7C8CFF 0%, #4C3FA8 22%, #23185E 48%, #0C0A2A 70%, #05050F 100%);
+  box-shadow: -30px -30px 120px rgba(124,140,255,.35), inset 30px 30px 80px rgba(255,255,255,.08); }
+.planet::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; box-shadow: 0 0 60px 6px rgba(167,139,250,.45); }
+.ring { position: absolute; right: -470px; bottom: 30px; width: 1280px; height: 260px; border-radius: 50%; z-index: 0; pointer-events: none;
+  border: 2px solid rgba(251,191,74,.45); transform: rotate(-16deg); box-shadow: 0 0 22px rgba(251,191,74,.25), inset 0 0 22px rgba(251,191,74,.15); }
+.ring.r2 { width: 1060px; height: 200px; right: -360px; bottom: 60px; border-color: rgba(94,234,212,.35); box-shadow: 0 0 18px rgba(94,234,212,.2); }
+.cover > *:not(.planet):not(.ring), .finale > *:not(.planet):not(.ring) { position: relative; z-index: 1; }
+.strip { display: grid; grid-template-columns: 0.91fr 0.94fr 0.66fr 1.24fr 2.5fr; gap: 6px; margin-top: 8px; }
+.seg { height: 54px; border-radius: 8px; display: flex; align-items: center; padding: 0 14px; font-family: var(--f-body); font-weight: 600; font-size: 17px; color: #04060E; }
+.seg small { font-size: 13px; opacity: .75; margin-left: auto; }
+.seg.hot { box-shadow: 0 0 22px rgba(255,122,122,.6); }
+
+/* orbit-track scrubber */
+.scrub { position: absolute; left: 96px; right: 190px; bottom: 40px; height: 44px; display: flex; gap: 8px; align-items: flex-end; z-index: 3; }
+.scrub .part { flex: var(--w); display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.scrub .lbl { font-family: var(--f-body); font-weight: 600; font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.scrub .bar { height: 3px; border-radius: 2px; background: rgba(150,182,235,.22); position: relative; overflow: visible; }
+.scrub .bar i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, var(--violet), var(--teal)); box-shadow: 0 0 10px rgba(94,234,212,.7); border-radius: 2px; }
+.scrub .part.on .lbl { color: var(--teal); }
+.scrub .part.on .bar i::after { content: ""; position: absolute; right: -5px; top: -4px; width: 11px; height: 11px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px #fff, 0 0 22px var(--teal); }
+.scrub .count { font-family: var(--f-mono); font-size: 14px; color: var(--ink); margin-left: 10px; padding: 3px 10px; border-radius: 99px; background: rgba(4,6,14,.72); border: 1px solid var(--line); white-space: nowrap; align-self: flex-end; }
+
+.nav { position: fixed; right: max(18px, env(safe-area-inset-right, 0px)); bottom: max(14px, env(safe-area-inset-bottom, 0px)); display: flex; gap: 8px; z-index: 10; }
+.nav button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(94,234,212,.4); background: rgba(10,16,38,.8); color: var(--ink); font-size: 20px; cursor: pointer; box-shadow: 0 0 14px rgba(94,234,212,.18); }
+.nav button:hover { box-shadow: 0 0 20px rgba(94,234,212,.45); }
+.nav button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+/* sparkle layer for slide transitions */
+#sparks { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html.static * { animation: none !important; }
+  .slide.active > * { animation: rise .55s cubic-bezier(.2,.7,.2,1) both; }
+  .slide.active > *:nth-child(2) { animation-delay: .06s; }
+  .slide.active > *:nth-child(3) { animation-delay: .12s; }
+  .slide.active > *:nth-child(4) { animation-delay: .18s; }
+  .cover h1 .glint { animation: glint 5.5s ease-in-out infinite; }
+  .big, .mid { animation: pulse 3.6s ease-in-out infinite; }
+  .planet { animation: drift 18s ease-in-out infinite alternate; }
+  .ring { animation: ringspin 26s ease-in-out infinite alternate; }
+  .seg.hot { animation: hot 2.2s ease-in-out infinite; }
+}
+@keyframes rise { from { transform: translateY(12px); opacity: .55; } to { transform: none; opacity: 1; } }
+@keyframes glint { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0% 0; } }
+@keyframes pulse { 0%, 100% { text-shadow: 0 0 14px currentColor; } 50% { text-shadow: 0 0 30px currentColor, 0 0 2px #fff; } }
+@keyframes drift { from { transform: translate(0, 0); } to { transform: translate(-30px, -18px); } }
+@keyframes ringspin { from { transform: rotate(-16deg); } to { transform: rotate(-12deg) translateY(-8px); } }
+@keyframes hot { 0%, 100% { box-shadow: 0 0 14px rgba(255,122,122,.45); } 50% { box-shadow: 0 0 30px rgba(255,122,122,.85); } }
+
+
+.flow{display:flex;align-items:stretch;gap:14px;flex:1}
+.flow .fl{flex:1;min-width:0}
+.flow .arr{align-self:center;font-size:40px;color:var(--teal)}
+.hm{display:grid;grid-template-columns:130px repeat(3,1fr);gap:5px;margin:4px 0}
+.hm-h{font:500 17px/1 var(--mono, monospace);color:var(--dim, #9aa6c4);display:flex;align-items:center;justify-content:center}
+.hm-c{height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font:600 22px/1 var(--mono, monospace);color:#fff}
+.hm-best{outline:3px solid #fff}
+
+.arch{display:flex;align-items:stretch;gap:12px;flex:1}
+.ablock{flex:1;min-width:0;position:relative;border:1px solid var(--line);border-radius:18px;padding:20px 20px 46px;background:rgba(14,22,48,.7);display:flex;flex-direction:column;gap:8px}
+.ablock.big1{flex:1.3;background:linear-gradient(160deg,rgba(124,139,168,.18),rgba(14,22,48,.75))}
+.ablock.big2{flex:1.3;border-color:var(--blue);background:linear-gradient(160deg,rgba(125,166,255,.2),rgba(14,22,48,.75));box-shadow:0 0 40px rgba(125,166,255,.18)}
+.ablock.big3{flex:1.2;border-color:var(--teal);background:linear-gradient(160deg,rgba(94,234,212,.16),rgba(14,22,48,.75))}
+.anum{font-family:var(--f-display);font-weight:700;font-size:58px;line-height:1}
+.aarr{align-self:center;font-size:34px;color:var(--teal)}
+.tag{position:absolute;left:20px;bottom:14px;font:600 13px/1 var(--f-body);letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:99px;background:rgba(233,239,251,.1);color:var(--muted)}
+.tag.tb{background:rgba(125,166,255,.2);color:var(--blue)}
+.tag.tt{background:rgba(94,234,212,.18);color:var(--teal)}
+.ftrow{display:flex;gap:14px;align-items:stretch}
+.ftrow>.panel{flex:1}
+.ftarr{align-self:center;font-size:36px;color:var(--teal)}
+ul.two{display:grid!important;grid-template-columns:1fr 1fr;gap:4px 24px;font-size:15.5px!important;line-height:1.35}
+.ftrow .big{font-size:64px}
+.arch+.grid .mid{font-size:44px}
+ul.two li{break-inside:avoid}
+.budget{display:flex;height:64px;border-radius:12px;overflow:hidden;margin:14px 0}
+.bseg{display:flex;align-items:center;padding:0 18px;font:600 18px/1 var(--f-body);color:#04060E;white-space:nowrap}
+
+.tp{display:flex;align-items:stretch;gap:8px;flex:1;margin-top:6px}
+.tps{flex:1;min-width:0;position:relative;border:1px solid var(--line);border-radius:16px;padding:18px 16px 54px;background:rgba(14,22,48,.72);display:flex;flex-direction:column;gap:6px}
+.tps h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:24px;line-height:1.15}
+.tps.hot{border-color:var(--blue);box-shadow:0 0 36px rgba(125,166,255,.2);background:linear-gradient(160deg,rgba(125,166,255,.18),rgba(14,22,48,.75))}
+.tpn{font-family:var(--f-display);font-weight:700;font-size:40px;line-height:1;color:var(--teal);text-shadow:0 0 14px rgba(94,234,212,.5)}
+.tpa{align-self:center;font-size:26px;color:var(--teal)}
+.dtag{position:absolute;left:16px;right:16px;bottom:14px;font:600 13px/1.2 var(--f-body);padding:7px 10px;border-radius:10px;text-align:center;color:#04060E}
+.d-src{background:#7C8BA8}.d-tr{background:#7DA6FF}.d-va{background:#FBBF4A}.d-te{background:#FF7A7A}.d-cam{background:#5EEAD4}
+.tplegend{display:flex;flex-wrap:wrap;gap:10px 28px;font:500 16px/1.3 var(--f-body);color:var(--muted)}
+.tplegend i{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:8px;vertical-align:-2px}
+.archsvg{width:100%;height:100%;min-height:0;display:block}
+.archsvg text{font-family:var(--f-body)}
 </style>
-</head>
-<body>
+
+<canvas id="sky" aria-hidden="true"></canvas>
 <div class="viewport"><div class="stage" id="stage">
+<canvas id="sparks" aria-hidden="true"></canvas>
 
-<section class="slide cover">
-  <div class="sun" aria-hidden="true"></div>
-  <div class="chap">Report 4 · Báo cáo tổng kết môn học · 2026</div>
-  <h1 style="max-width:1300px;margin-top:40px">Phát hiện người đã ngã trong video: từ dữ liệu đến hệ thống thời gian thực</h1>
-  <p class="lead" style="max-width:1100px">Kiểm tra dữ liệu, fine-tune mô hình và điều kiện hoá chuyển trạng thái trên benchmark OmniFall</p>
-  <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;font-size:26px;position:relative;z-index:1;margin-bottom:150px">
-    <div><b style="color:#fbf1df">Nhóm:</b> Nguyễn Duy Quân (trưởng nhóm) · Phạm Tuấn Vỹ · Nghiêm Thị Thu Huyền · Vũ Hoàng Anh</div>
-    <div><b style="color:#fbf1df">Giảng viên hướng dẫn:</b> Lương Trung Kiên</div>
-  </div>
-  <svg class="dunes" viewBox="0 0 1920 260" preserveAspectRatio="none" aria-hidden="true"><path d="M0 160 Q300 60 640 150 T1300 120 T1920 140 V260 H0Z" fill="#8c3b22" opacity=".55"/><path d="M0 210 Q420 120 860 200 T1920 190 V260 H0Z" fill="#b5532f"/></svg>
-</section>
-
-<section class="slide">
-  <div class="chap">Hành trình báo cáo</div>
-  <h2>Nội dung trình bày: bảy chặng</h2>
-  <div class="route">
-    <div class="stop"><b>1</b><span>Giới thiệu</span><em>bài toán, mục tiêu</em></div>
-    <div class="stop"><b>2</b><span>Tổng quan</span><em>nghiên cứu liên quan</em></div>
-    <div class="stop"><b>3</b><span>Dữ liệu</span><em>nguồn, xử lý, lỗi</em></div>
-    <div class="stop"><b>4</b><span>Phương pháp</span><em>kiến trúc 3 tầng</em></div>
-    <div class="stop"><b>5</b><span>Thực nghiệm</span><em>huấn luyện, cách chấm</em></div>
-    <div class="stop"><b>6</b><span>Kết quả</span><em>số liệu, thống kê</em></div>
-    <div class="stop"><b>7</b><span>Kết luận</span><em>hạn chế, hướng đi</em></div>
-  </div>
-  <div class="row c3" style="flex:none;margin-top:50px">
-    <div class="card oc"><div class="k">Kết quả cuối</div><div class="num s">44.3 / 62.0 / 69.3</div><div class="small">F1 đã ngã / đang ngã / gộp khi chạy như camera</div></div>
-    <div class="card st"><div class="k">So với hệ thống cũ</div><div class="num s">+12 – 17</div><div class="small">điểm F1 trên cả ba chỉ số</div></div>
-    <div class="card sg"><div class="k">Tốc độ</div><div class="num s">40–47 ms</div><div class="small">mỗi bước suy luận trên RTX 3070</div></div>
+<!-- 1 · cover -->
+<section class="slide cover" data-part="Giới thiệu">
+  <div class="planet" aria-hidden="true"></div><div class="ring" aria-hidden="true"></div><div class="ring r2" aria-hidden="true"></div>
+  <div class="eyebrow">Report 4 · Báo cáo tổng kết môn học <span style="color:var(--muted)">· OmniFall benchmark · 2026</span></div>
+  <h1>Phát hiện người <span class="glint">đã ngã</span> từ video, từ dữ liệu tới hệ thống realtime</h1>
+  <p class="lead" style="max-width:1100px">Camera nhìn thấy một người ngã: làm sao để máy tự nhận ra người đó <b>vẫn đang nằm dưới sàn</b> và báo cho người thân?</p>
+  <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px">
+    <div class="kicker">Một clip tai nạn thật · nhãn theo thời gian (giây)</div>
+    <div class="strip">
+      <div class="seg" style="background:#7C8BA8">khác <small>0–0.91</small></div>
+      <div class="seg" style="background:#5EEAD4">đi bộ <small>0.91–1.85</small></div>
+      <div class="seg" style="background:#7C8BA8">khác <small>1.85–2.51</small></div>
+      <div class="seg" style="background:#FBBF4A">đang ngã <small>2.51–3.75</small></div>
+      <div class="seg hot" style="background:#FF7A7A;color:#fff">đã ngã <small style="color:#fff">3.75–11.5</small></div>
+    </div>
+    <p class="small" style="margin-top:14px">Nguyễn Duy Quân · Phạm Tuấn Vỹ · Nghiêm Thị Thu Huyền · Vũ Hoàng Anh · GVHD: Lương Trung Kiên</p>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 1 · Giới thiệu</div>
+<section class="slide" data-part="Giới thiệu">
+  <div class="eyebrow">Nội dung</div>
+  <h2>Báo cáo gồm 7 phần, trọng tâm là kết quả</h2>
+  <div class="grid g4" style="flex:none">
+    <div class="panel col"><div class="mid t-teal">01</div><div class="kicker">Giới thiệu</div><p class="small">Bài toán, mục tiêu</p></div>
+    <div class="panel col"><div class="mid t-teal">02</div><div class="kicker">Tổng quan</div><p class="small">Nghiên cứu liên quan</p></div>
+    <div class="panel col"><div class="mid t-teal">03</div><div class="kicker">Dữ liệu</div><p class="small">Nguồn, xử lý, 2 lỗi</p></div>
+    <div class="panel col"><div class="mid t-teal">04</div><div class="kicker">Phương pháp</div><p class="small">Kiến trúc 3 tầng</p></div>
+  </div>
+  <div class="grid g3" style="flex:none">
+    <div class="panel col"><div class="mid t-teal">05</div><div class="kicker">Thực nghiệm</div><p class="small">Huấn luyện, cách chấm</p></div>
+    <div class="panel col" style="border-color:var(--teal)"><div class="mid t-fallen">06</div><div class="kicker">Kết quả</div><p class="small">Số liệu, phân tích, thống kê</p></div>
+    <div class="panel col"><div class="mid t-teal">07</div><div class="kicker">Kết luận</div><p class="small">Bài học, hạn chế, hướng đi</p></div>
+  </div>
+</section>
+
+<section class="slide" data-part="Giới thiệu">
+  <div class="eyebrow">Giới thiệu</div>
   <h2>Thời gian nằm trên sàn sau cú ngã còn nguy hiểm hơn chính cú ngã</h2>
-  <div class="row c2">
-    <div class="card st"><h3>Lý do chọn đề tài</h3><ul>
-      <li>Ngã là nguyên nhân chấn thương hàng đầu ở người cao tuổi.</li>
-      <li>Người sống một mình có thể nằm hàng giờ không ai biết.</li>
-      <li>Camera RGB thường đã có sẵn, rẻ, không cần đeo thiết bị.</li>
-      <li>Mô hình học trên video dựng thường kém khi gặp tai nạn thật.</li></ul></div>
-    <div class="card in"><h3>Mục tiêu</h3><ul>
-      <li>Phát hiện trạng thái <b>“đã ngã”</b>: người ngã và chưa đứng dậy.</li>
-      <li>Kiểm tra và sửa toàn bộ quy trình dữ liệu.</li>
-      <li>So sánh có hệ thống 4 cách cải thiện mô hình.</li>
-      <li>Đánh giá như camera thật và chạy được thời gian thực.</li></ul></div>
+  <div class="grid g2">
+    <div class="panel col"><div class="kicker">Lý do chọn đề tài</div><ul class="clean">
+      <li>Ngã là nguyên nhân chấn thương hàng đầu ở người cao tuổi</li>
+      <li>Người sống một mình có thể nằm hàng giờ không ai biết</li>
+      <li>Camera thường đã có sẵn, rẻ, không cần đeo thiết bị</li>
+      <li>Mô hình học trên video dựng thường kém với tai nạn thật</li></ul></div>
+    <div class="panel col" style="border-color:var(--teal)"><div class="kicker t-teal">Mục tiêu</div><ul class="clean">
+      <li>Phát hiện trạng thái <b class="t-fallen">“đã ngã”</b>: ngã và chưa đứng dậy</li>
+      <li>Kiểm tra và sửa toàn bộ quy trình dữ liệu</li>
+      <li>So sánh có hệ thống 4 cách cải thiện mô hình</li>
+      <li>Đánh giá như camera thật, chạy thời gian thực</li></ul></div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 1 · Phát biểu bài toán</div>
+<section class="slide" data-part="Giới thiệu">
+  <div class="eyebrow">Phát biểu bài toán</div>
   <h2>Đầu vào là luồng video, đầu ra là xác suất 10 hành động mỗi 0.133 giây</h2>
-  <div class="row c46">
-    <div class="card oc"><h3>Đầu vào / đầu ra</h3>
-      <p><b>Input:</b> video RGB, lấy mẫu 7.5 khung/giây.</p>
-      <p><b>Output:</b> mỗi 0.133 s một phân phối xác suất trên 10 lớp, kèm cảnh báo khi “đã ngã” kéo dài.</p>
-      <p><b>Ràng buộc:</b> chỉ dùng hình ảnh quá khứ, mỗi bước dưới 133 ms.</p></div>
-    <div class="card in"><h3>10 lớp hành động lõi của OmniFall</h3>
-      <div><span class="tag">walk · đi</span><span class="tag" style="background:#f3d3a7">fall · đang ngã</span><span class="tag" style="background:#ebb79f">fallen · đã ngã</span><span class="tag">sit_down</span><span class="tag">sitting</span><span class="tag">lie_down</span><span class="tag">lying</span><span class="tag">stand_up</span><span class="tag">standing</span><span class="tag">other</span></div>
-      <p class="small">OmniFall có 16 lớp; 6 lớp mở rộng (quỳ, ngồi xổm…) chỉ có ở dữ liệu thật và tổng hợp. Nhóm theo giao thức 10 lớp lõi; dữ liệu dùng không có nhãn nào ngoài 10 lớp này.</p>
-      <p><b>Chỉ số chính:</b> F1 “đã ngã”, F1 “đang ngã” và F1 gộp “đang ngã ∪ đã ngã”.</p></div>
+  <div class="grid g2">
+    <div class="panel col"><div class="kicker">Đầu vào / đầu ra</div>
+      <p class="body"><b>Input:</b> video RGB, lấy mẫu 7.5 khung/giây</p>
+      <p class="body"><b>Output:</b> mỗi 0.133 s một xác suất trên 10 lớp + cảnh báo</p>
+      <p class="body"><b>Ràng buộc:</b> chỉ nhìn quá khứ, mỗi bước dưới 133 ms</p></div>
+    <div class="panel col"><div class="kicker">10 lớp lõi của OmniFall</div>
+      <p class="body">đi · <b class="t-fall">đang ngã</b> · <b class="t-fallen">đã ngã</b> · ngồi xuống · đang ngồi · nằm xuống · đang nằm · đứng dậy · đang đứng · khác</p>
+      <p class="small">OmniFall có 16 lớp; 6 lớp mở rộng chỉ có ở dữ liệu thật và tổng hợp. Nhóm theo giao thức 10 lớp lõi; dữ liệu dùng không có nhãn nào ngoài 10 lớp.</p>
+      <p class="small">Chỉ số: F1 “đã ngã”, F1 “đang ngã”, F1 gộp.</p></div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 2 · Tổng quan nghiên cứu</div>
-  <h2>Các hướng tiếp cận liên quan</h2>
-  <div class="row c3" style="grid-template-rows:1fr 1fr">
-    <div class="card st"><h3>CNN phát hiện ngã</h3><p class="small">Phân loại khung hoặc clip ngắn trên bộ dàn dựng (Le2i, Multicam). Chính xác cao trong lab, kém khi ra thực tế.</p></div>
-    <div class="card oc"><h3>Dữ liệu đa cảm biến</h3><p class="small">UP-Fall kết hợp camera và cảm biến đeo; người dùng phải đeo thiết bị.</p></div>
-    <div class="card sg"><h3>Video Transformer</h3><p class="small">VideoMAE học tự giám sát bằng che khối không-thời gian; đặc trưng tổng quát tốt.</p></div>
-    <div class="card in"><h3>OmniFall</h3><p class="small">Gộp 8 bộ dàn dựng + 12.000 video tổng hợp, thêm 818 clip tai nạn thật OF-ItW để kiểm tra khả năng tổng quát.</p></div>
-    <div class="card st"><h3>Làm mượt theo thời gian</h3><p class="small">MS-TCN, HMM: kết hợp dự đoán từng khung với ma trận chuyển trạng thái.</p></div>
-    <div class="card oc"><h3>Khoảng trống</h3><p class="small">Ít công trình đánh giá kiểu streaming nhân quả và kiểm tra lỗi trong quy trình dữ liệu.</p></div>
+<section class="slide" data-part="Tổng quan">
+  <div class="eyebrow">Tổng quan nghiên cứu</div>
+  <h2>Các hướng tiếp cận liên quan và khoảng trống nhóm nhắm tới</h2>
+  <div class="grid g3" style="grid-template-rows:1fr 1fr">
+    <div class="panel col"><div class="kicker">CNN phát hiện ngã</div><p class="small">Chính xác cao trên bộ dàn dựng (Le2i, Multicam), kém khi ra thực tế.</p></div>
+    <div class="panel col"><div class="kicker">Đa cảm biến</div><p class="small">UP-Fall kết hợp camera và cảm biến đeo; người dùng phải đeo thiết bị.</p></div>
+    <div class="panel col"><div class="kicker">Video Transformer</div><p class="small">VideoMAE học tự giám sát bằng che khối không-thời gian.</p></div>
+    <div class="panel col"><div class="kicker">OmniFall</div><p class="small">8 bộ dàn dựng + 12.000 video tổng hợp, kiểm tra trên 818 clip tai nạn thật.</p></div>
+    <div class="panel col"><div class="kicker">Làm mượt thời gian</div><p class="small">MS-TCN, HMM: kết hợp dự đoán từng khung với ma trận chuyển trạng thái.</p></div>
+    <div class="panel col" style="border-color:var(--teal)"><div class="kicker t-teal">Khoảng trống</div><p class="small">Ít công trình đánh giá streaming nhân quả và kiểm tra lỗi quy trình dữ liệu.</p></div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 3 · Dữ liệu</div>
+<section class="slide" data-part="Dữ liệu">
+  <div class="eyebrow">Dữ liệu</div>
   <h2>5 nguồn, 13.268 video: học trên video dựng, kiểm tra trên tai nạn thật</h2>
-  <div class="card" style="flex:none"><table>
+  <div class="panel" style="flex:none"><table class="data">
     <thead><tr><th>Nguồn</th><th>Loại</th><th class="n">Video</th><th class="n">Segment</th><th class="n">Giờ</th><th>Train / val / test</th></tr></thead>
     <tbody>
       <tr><td>OF-Syn</td><td>Tổng hợp</td><td class="n">12,000</td><td class="n">19,228</td><td class="n">16.88</td><td>9,600 / 1,200 / 1,200</td></tr>
@@ -215,191 +316,424 @@ html::view-transition{background:#2a1f17}
       <tr><td>CAUCAFall</td><td>Dàn dựng</td><td class="n">100</td><td class="n">258</td><td class="n">0.28</td><td>69 / 9 / 19 *</td></tr>
       <tr class="hl"><td>OF-ItW (OOPS)</td><td>Tai nạn thật</td><td class="n">818</td><td class="n">4,022</td><td class="n">2.65</td><td>165 / 81 / 572</td></tr>
     </tbody></table></div>
-  <p class="small">24.933 segment trước làm sạch, 24.928 sau làm sạch. * 3 video CAUCAFall không có trong split chính thức nên bị loại. Mọi lựa chọn làm trên 81 video val; 572 video test chỉ chấm một lần.</p>
+  <p class="note">24.933 segment trước làm sạch, 24.928 sau. * 3 video CAUCAFall không có trong split chính thức. Mọi lựa chọn trên 81 video val; 572 video test chấm một lần.</p>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 3 · Khảo sát dữ liệu</div>
-  <h2>Video thật khác hẳn video học: nhiều “đang ngã”, gần như không có “nằm xuống”</h2>
-  <div class="row c2">
-    <div class="fig"><img src="../figs/fig1_examples.png" alt="Khung hình ví dụ"><div class="cap">Một clip test: cú ngã kéo dài khoảng 1.2 s, trạng thái “đã ngã” gần 8 s.</div></div>
-    <div class="fig"><img src="../figs/fig2_classes.png" alt="Phân bố lớp"><div class="cap">Phân bố lớp theo miền dữ liệu.</div></div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="chap">Chặng 3 · Quy trình xử lý</div>
-  <h2>12 bước xử lý, mỗi bước đều có số liệu kiểm tra</h2>
-  <div class="row c4">
-    <div class="card st"><div class="k">A · Nhãn</div><ul class="small"><li>Gộp 5 nguồn</li><li>Xoá 5 dòng lỗi (4 end ≤ start, 1 trùng)</li><li>Kiểm tra split: không video trùng</li><li>Kiểm tra thời gian nhãn</li><li>Đếm chuyển trạng thái</li></ul></div>
-    <div class="card oc"><div class="k">B · Video</div><ul class="small"><li>Đo fps từng video: 154 video 23.98 fps</li><li>Lấy mẫu theo đồng hồ 7.5 fps</li><li>Cắt trái / giữa / phải cho 242 video dọc</li></ul></div>
-    <div class="card sg"><div class="k">C · Đặc trưng</div><ul class="small"><li>VideoMAE trích vector 768 chiều</li><li>Cố định cửa sổ đánh giá</li><li>Tăng cường dữ liệu khi huấn luyện</li></ul></div>
-    <div class="card in"><div class="k">D · Thời gian thực</div><ul class="small"><li>Tiền xử lý GPU: 2.9 ms/khung (CPU 7.2 ms)</li><li>Cosine 0.9998 so với CPU</li><li>98.7% dự đoán giống hệt</li></ul></div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="chap">Chặng 3 · Lỗi phát hiện được</div>
-  <h2>Hai lỗi tiền xử lý và một nguồn nhiễu đánh giá</h2>
-  <div class="row c64">
-    <div class="fig"><img src="../figs/fig3_preproc.png" alt="Lệch nhãn và cắt ảnh"><div class="cap">(a) Lệch nhãn với cách lấy mẫu cũ. (b) Phần khung giữ lại khi cắt giữa.</div></div>
-    <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
-      <div class="card st"><h3>Lỗi 1 · Lấy mẫu</h3><p class="small">Lấy 1 khung mỗi round(f/7.5): video 23.98 fps thành 8 fps nhưng gắn nhãn như 7.5 fps. 85 video lệch quá 0.5 s, nặng nhất 2.18 s.</p></div>
-      <div class="card oc"><h3>Lỗi 2 · Cắt ảnh</h3><p class="small">Cắt giữa video dọc chỉ giữ 56% khung, người ngã có thể nằm ngoài vùng nhìn.</p></div>
-      <div class="card in"><h3>Nhiễu đánh giá</h3><p class="small">Cửa sổ ngẫu nhiên: cùng mô hình dao động 23.5–26.0 F1. Nhóm cố định cửa sổ.</p></div>
+<section class="slide" data-part="Dữ liệu">
+  <div class="eyebrow">Xử lý dữ liệu <span class="tc">04</span></div>
+  <h2>Xử lý dữ liệu qua 12 bước, bước nào cũng được kiểm tra bằng số liệu</h2>
+  <div class="pipe">
+    <div class="stagecol"><div class="kicker">A · Nhãn</div><h3>Làm sạch nhãn</h3>
+      <div class="step"><b>01</b><span>Gộp 5 nguồn dữ liệu<em>24.933 đoạn, không nhãn lạ</em></span></div>
+      <div class="step"><b>02</b><span>Xoá nhãn lỗi<em>bỏ 5 dòng sai hoặc trùng</em></span></div>
+      <div class="step"><b>03</b><span>Tách riêng dữ liệu học và thi<em>không video nào bị trùng</em></span></div>
+      <div class="step"><b>04</b><span>Kiểm tra thời gian nhãn<em>252 đoạn rất ngắn, vẫn giữ</em></span></div>
+      <div class="step"><b>05</b><span>Đếm hành động nối tiếp nhau<em>ngã xong thường là nằm</em></span></div>
+    </div>
+    <div class="stagecol"><div class="kicker">B · Video</div><h3>Đọc video</h3>
+      <div class="step"><b>06</b><span>Đo thông số từng video<em>154 video 24 khung/giây</em></span></div>
+      <div class="step"><b>07</b><span>Lấy ảnh theo đúng thời gian<em>sửa lệch tới 2.2 giây</em></span></div>
+      <div class="step"><b>08</b><span>Cắt ảnh trái / giữa / phải<em>để không mất 44% khung hình</em></span></div>
+    </div>
+    <div class="stagecol"><div class="kicker">C · Đặc trưng</div><h3>Ảnh → con số</h3>
+      <div class="step"><b>09</b><span>Mô hình VideoMAE đọc video<em>tóm tắt mỗi 0.13 giây</em></span></div>
+      <div class="step"><b>10</b><span>Cắt đoạn cố định để chấm<em>điểm không còn dao động</em></span></div>
+      <div class="step"><b>11</b><span>Làm đa dạng dữ liệu học<em>cắt ngẫu nhiên khi huấn luyện</em></span></div>
+    </div>
+    <div class="stagecol"><div class="kicker">D · Realtime</div><h3>Chạy như camera</h3>
+      <div class="step"><b>12</b><span>Xử lý ngay trên GPU<em>giống bản chạy chậm, 2.9 ms mỗi ảnh</em></span></div>
+      <p class="note" style="margin-top:auto">Mỗi dòng màu là con số đo được ở bước đó.</p>
     </div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 4 · Phương pháp</div>
-  <h2>Kiến trúc 3 tầng: từ 16 khung hình đến một cảnh báo</h2>
-  <div class="row c46">
-    <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
-      <div class="card"><div class="k">Tầng 1 · 86M · đóng băng</div><h3>VideoMAE-Base</h3><p class="small">16 khung 224×224 → 1.568 khối → 12 lớp → vector 768.</p></div>
-      <div class="card st"><div class="k">Tầng 2 · 14.8M · fine-tune</div><h3>Transformer thời gian</h3><p class="small">18 vector (≈4.4 s), 2 lớp, 8 đầu chú ý, FFN 3072 → 10 lớp.</p></div>
-      <div class="card sg"><div class="k">Tầng 3 · không trọng số học</div><h3>Quy tắc chuyển trạng thái</h3><p class="small">Sau “đang ngã”, tăng điểm “đã ngã” trong W giây.</p></div>
+<section class="slide" data-part="Dữ liệu">
+  <div class="eyebrow">Lỗi dữ liệu 1 <span class="tc">05</span></div>
+  <h2>Lỗi 1: 154 video bị lệch thời gian, nhãn trôi tới 2.2 giây</h2>
+  <div class="grid g-62">
+    <div class="panel col"><div class="kicker">Mỗi chấm là một video: video càng dài, lệch càng nhiều</div><div class="chart" id="c-drift"></div></div>
+    <div class="col">
+      <p class="body">Video quay ở 24 khung hình/giây bị đọc sai tốc độ, nên hình ảnh và nhãn trôi dần khỏi nhau.</p>
+      <div class="panel col"><div class="mid t-fallen">104</div><div class="small">đoạn video bị lệch quá nửa thời lượng</div></div>
+      <p class="small">Đã sửa: đọc khung hình theo đúng thời gian thật.</p>
     </div>
-    <div class="fig"><img src="../figs/fig4_arch.png" alt="Kiến trúc hệ thống"><div class="cap">Kiến trúc hệ thống và pipeline huấn luyện.</div></div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 4 · Hậu xử lý</div>
+<section class="slide" data-part="Dữ liệu">
+  <div class="eyebrow">Lỗi dữ liệu 2 <span class="tc">06</span></div>
+  <h2>Lỗi 2: mô hình chỉ nhìn phần giữa ảnh, bỏ mất 44% khung hình</h2>
+  <div class="grid g-62">
+    <div class="col">
+      <div class="frame" style="max-width:740px">
+        <video src="media/example_fall.mp4" muted loop playsinline preload="auto" aria-label="Clip ví dụ với vùng crop giữa" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+        <div class="shade" style="left:0;width:21.9%"></div>
+        <div class="shade" style="right:0;width:21.9%"></div>
+        <div class="crop" style="left:21.9%;width:56.25%;border-color:#5EEAD4"><span style="background:#5EEAD4">crop giữa · mô hình gốc chỉ thấy phần này</span></div>
+      </div>
+      <div class="cropbars">
+        <div style="left:0;width:56.25%"><span>nhìn thêm bên trái</span></div>
+        <div style="left:43.75%;width:56.25%;top:22px"><span>nhìn thêm bên phải</span></div>
+      </div>
+      <p class="note">Phần tối hai bên là vùng mô hình gốc không nhìn thấy.</p>
+    </div>
+    <div class="col">
+      <div class="panel col"><div class="mid">56%</div><div class="small">phần khung hình mô hình gốc thực sự nhìn thấy</div></div>
+      <p class="body">Cách sửa: cho mô hình nhìn thêm phần trái và phải rồi gộp kết quả.</p>
+      <div class="panel col"><div class="mid t-teal">+1.9</div><div class="small">điểm F1 "đã ngã" tăng thêm nhờ nhìn đủ khung hình</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-part="Phương pháp">
+  <div class="eyebrow">Kiến trúc mô hình</div>
+  <h2>Hai tầng Transformer: 101 triệu tham số, ra quyết định 7.5 lần mỗi giây</h2>
+  <div class="arch">
+    <div class="ablock"><div class="kicker">Đầu vào</div><div class="anum">16 ảnh</div><p class="small">224 × 224, lấy 7.5 ảnh/giây theo đồng hồ thật</p></div>
+    <div class="aarr">→</div>
+    <div class="ablock big1"><div class="kicker">Tầng 1 · VideoMAE-Base</div><div class="anum">86M</div><p class="small">12 lớp Transformer, học sẵn trên 400 hành động (Kinetics-400). Mỗi cụm 16 ảnh → 1 vector <b>768 chiều</b>.</p><div class="tag">đóng băng</div></div>
+    <div class="aarr">→</div>
+    <div class="ablock big2"><div class="kicker">Tầng 2 · Transformer thời gian</div><div class="anum t-blue">14.8M</div><p class="small">2 lớp, 8 đầu chú ý, 768 chiều. Đọc chuỗi <b>18 vector ≈ 4.4 giây</b> → điểm cho 10 hành động.</p><div class="tag tb">fine-tune</div></div>
+    <div class="aarr">→</div>
+    <div class="ablock big3"><div class="kicker">Tầng 3 · Quy tắc chuyển trạng thái</div><div class="anum t-teal">0</div><p class="small">tham số học. Sau "đang ngã", đẩy điểm "đã ngã" trong 5 giây, giảm dần với chu kỳ bán rã 1 giây.</p><div class="tag tt">tune trên val</div></div>
+  </div>
+  <div class="grid g4" style="flex:none">
+    <div class="panel col"><div class="mid">0.133 s</div><div class="small">bước trượt giữa hai vector</div></div>
+    <div class="panel col"><div class="mid">× 3 góc</div><div class="small">trái / giữa / phải, lấy trung bình</div></div>
+    <div class="panel col"><div class="mid">10 lớp</div><div class="small">hành động đầu ra</div></div>
+    <div class="panel col"><div class="mid t-teal">40–47 ms</div><div class="small">mỗi lần dự đoán, RTX 3070</div></div>
+  </div>
+</section>
+
+<section class="slide" data-part="Phương pháp">
+  <div class="eyebrow">Kiến trúc chi tiết</div>
+  <h2 style="font-size:44px">Bên trong mô hình: từ 16 ảnh đến một cảnh báo</h2>
+  <div class="panel" style="flex:1;min-height:0;padding:10px 14px;display:flex"><svg viewBox="0 36 1420 720" class="archsvg" role="img" aria-label="Sơ đồ kiến trúc chi tiết">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#5EEAD4"/></marker>
+  </defs>
+  <!-- stage 1 band -->
+  <rect x="10" y="40" width="1400" height="260" rx="18" fill="rgba(124,139,168,.08)" stroke="rgba(124,139,168,.35)"/>
+  <text x="30" y="70" font-size="20" font-weight="700" fill="#E9EFFB">TẦNG 1 · VideoMAE-Base · 86M tham số · đóng băng</text>
+  <rect x="30" y="150" width="120" height="90" rx="6" fill="#16224a" stroke="#7C8BA8" stroke-width="1.5"/><rect x="37" y="143" width="120" height="90" rx="6" fill="#16224a" stroke="#7C8BA8" stroke-width="1.5"/><rect x="44" y="136" width="120" height="90" rx="6" fill="#16224a" stroke="#7C8BA8" stroke-width="1.5"/><rect x="51" y="129" width="120" height="90" rx="6" fill="#16224a" stroke="#7C8BA8" stroke-width="1.5"/><rect x="58" y="122" width="120" height="90" rx="6" fill="#16224a" stroke="#7C8BA8" stroke-width="1.5"/><rect x="65" y="115" width="120" height="90" rx="6" fill="#16224a" stroke="#7C8BA8" stroke-width="1.5"/>
+  <text x="90" y="275" text-anchor="middle" font-size="17" fill="#9aa6c4">16 ảnh × 224×224</text>
+  <text x="90" y="292" text-anchor="middle" font-size="14" fill="#9aa6c4">7.5 ảnh/giây ≈ 2.1 s</text>
+  <line x1="200" y1="170" x2="248" y2="170" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+  <rect x="258" y="110" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="273" y="110" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="288" y="110" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="303" y="110" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="318" y="110" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="333" y="110" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="348" y="110" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="258" y="125" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="273" y="125" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="288" y="125" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="303" y="125" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="318" y="125" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="333" y="125" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="348" y="125" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="258" y="140" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="273" y="140" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="288" y="140" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="303" y="140" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="318" y="140" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="333" y="140" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="348" y="140" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="258" y="155" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="273" y="155" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="288" y="155" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="303" y="155" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="318" y="155" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="333" y="155" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="348" y="155" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="258" y="170" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="273" y="170" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="288" y="170" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="303" y="170" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="318" y="170" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="333" y="170" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="348" y="170" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="258" y="185" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="273" y="185" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="288" y="185" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="303" y="185" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="318" y="185" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="333" y="185" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="348" y="185" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="258" y="200" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="273" y="200" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="288" y="200" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/><rect x="303" y="200" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.44999999999999996"/><rect x="318" y="200" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.55"/><rect x="333" y="200" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="348" y="200" width="12" height="12" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+  <text x="310" y="245" text-anchor="middle" font-size="17" fill="#9aa6c4">1.568 khối 2×16×16</text>
+  <text x="310" y="262" text-anchor="middle" font-size="14" fill="#9aa6c4">+ mã vị trí → [1568 × 768]</text>
+  <line x1="372" y1="170" x2="420" y2="170" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+  <rect x="430" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.45"/><rect x="441" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.49"/><rect x="452" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.53"/><rect x="463" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.57"/><rect x="474" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.61"/><rect x="485" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.65"/><rect x="496" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.69"/><rect x="507" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.73"/><rect x="518" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.77"/><rect x="529" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.81"/><rect x="540" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.85"/><rect x="551" y="96" width="8" height="150" rx="2" fill="#7C8BA8" fill-opacity="0.89"/>
+  <text x="495" y="268" text-anchor="middle" font-size="17" fill="#9aa6c4">12 lớp Transformer</text>
+  <text x="495" y="285" text-anchor="middle" font-size="14" fill="#9aa6c4">12 đầu chú ý · không gian + thời gian</text>
+  <line x1="570" y1="170" x2="618" y2="170" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+  <rect x="628" y="140" width="120" height="60" rx="10" fill="#16224a" stroke="#7C8BA8"/>
+  <text x="688" y="166" text-anchor="middle" font-size="18" font-weight="700" fill="#E9EFFB">Trung bình</text>
+  <text x="688" y="186" text-anchor="middle" font-size="14" fill="#9aa6c4">1568 → 1</text>
+  <line x1="758" y1="170" x2="806" y2="170" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+  <rect x="816" y="150" width="300" height="40" rx="8" fill="#7DA6FF" fill-opacity=".55"/>
+  <text x="966" y="176" text-anchor="middle" font-size="19" font-weight="700" fill="#04060E">vector 768 chiều</text>
+  <text x="966" y="222" text-anchor="middle" font-size="16" fill="#9aa6c4">trượt 1 ảnh (0.133 s) rồi lặp lại</text>
+  <path d="M1120 170 C1200 170 1200 315 1080 315 L300 315 L300 405" fill="none" stroke="#5EEAD4" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+  <text x="1210" y="250" font-size="16" fill="#5EEAD4">ghép 18 vector</text>
+
+  <!-- stage 2 band -->
+  <rect x="10" y="330" width="1000" height="420" rx="18" fill="rgba(125,166,255,.08)" stroke="rgba(125,166,255,.45)"/>
+  <text x="30" y="362" font-size="20" font-weight="700" fill="#7DA6FF">TẦNG 2 · Transformer thời gian · 14.8M tham số · fine-tune</text>
+  <rect x="40" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.35"/><rect x="70" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.39"/><rect x="100" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.42"/><rect x="130" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.45"/><rect x="160" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.49"/><rect x="190" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.53"/><rect x="220" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.56"/><rect x="250" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.59"/><rect x="280" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.63"/><rect x="310" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.67"/><rect x="340" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.70"/><rect x="370" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.73"/><rect x="400" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.77"/><rect x="430" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.81"/><rect x="460" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.84"/><rect x="490" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.88"/><rect x="520" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.91"/><rect x="550" y="420" width="22" height="70" rx="4" fill="#7DA6FF" fill-opacity="0.95"/>
+  <text x="300" y="512" text-anchor="middle" font-size="17" fill="#9aa6c4">18 vector ≈ 4.4 s  →  [18 × 768]</text>
+  <line x1="590" y1="455" x2="628" y2="455" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+  <rect x="636" y="390" width="150" height="34" rx="7" fill="#16224a" stroke="#7DA6FF"/>
+  <text x="711" y="412" text-anchor="middle" font-size="16" fill="#E9EFFB">Linear + LayerNorm</text>
+  <rect x="636" y="432" width="150" height="34" rx="7" fill="#16224a" stroke="#7DA6FF"/>
+  <text x="711" y="454" text-anchor="middle" font-size="16" fill="#E9EFFB">+ mã vị trí sin/cos</text>
+  <rect x="806" y="380" width="190" height="200" rx="12" fill="rgba(125,166,255,.14)" stroke="#7DA6FF" stroke-width="1.5"/>
+  <text x="901" y="404" text-anchor="middle" font-size="17" font-weight="700" fill="#7DA6FF">Encoder × 2 lớp</text>
+  <rect x="822" y="416" width="158" height="30" rx="6" fill="#16224a"/><text x="901" y="436" text-anchor="middle" font-size="14" fill="#E9EFFB">LayerNorm</text>
+  <rect x="822" y="452" width="158" height="34" rx="6" fill="#7DA6FF" fill-opacity=".35"/><text x="901" y="474" text-anchor="middle" font-size="16" fill="#E9EFFB">Self-attention · 8 đầu</text>
+  <rect x="822" y="492" width="158" height="30" rx="6" fill="#16224a"/><text x="901" y="512" text-anchor="middle" font-size="14" fill="#E9EFFB">LayerNorm</text>
+  <rect x="822" y="528" width="158" height="34" rx="6" fill="#7DA6FF" fill-opacity=".35"/><text x="901" y="550" text-anchor="middle" font-size="16" fill="#E9EFFB">FFN 768→3072→768</text>
+  <text x="901" y="600" text-anchor="middle" font-size="14" fill="#9aa6c4">nối tắt (residual) + dropout 0.1</text>
+  <line x1="786" y1="430" x2="804" y2="430" stroke="#5EEAD4" stroke-width="2" marker-end="url(#ah)"/>
+  <rect x="636" y="630" width="150" height="40" rx="8" fill="#16224a" stroke="#7DA6FF"/>
+  <text x="711" y="655" text-anchor="middle" font-size="16" fill="#E9EFFB">Trung bình 18 → 1</text>
+  <rect x="806" y="630" width="190" height="40" rx="8" fill="#16224a" stroke="#7DA6FF"/>
+  <text x="901" y="655" text-anchor="middle" font-size="16" fill="#E9EFFB">Linear 768 → 10 lớp</text>
+  <path d="M901 582 L901 612 L711 612 L711 626" fill="none" stroke="#5EEAD4" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="786" y1="650" x2="804" y2="650" stroke="#5EEAD4" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="996" y1="650" x2="1040" y2="560" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+  <text x="40" y="560" font-size="17" fill="#9aa6c4">Mỗi vector "nhìn" 17 vector còn lại qua self-attention:</text>
+  <text x="40" y="582" font-size="17" fill="#9aa6c4">mô hình hiểu diễn biến "đổ xuống rồi nằm im",</text>
+  <text x="40" y="604" font-size="17" fill="#9aa6c4">khác với "đang nằm ngủ từ đầu".</text>
+  <text x="40" y="650" font-size="17" fill="#E9EFFB">2 lớp × ~7.1M (attention 2.4M + FFN 4.7M) + chiếu vào 0.6M</text>
+
+  <!-- stage 3 band -->
+  <rect x="1030" y="330" width="380" height="420" rx="18" fill="rgba(94,234,212,.08)" stroke="rgba(94,234,212,.5)"/>
+  <text x="1050" y="362" font-size="20" font-weight="700" fill="#5EEAD4">TẦNG 3 · Quy tắc + báo động</text>
+  <rect x="1150" y="392" width="13" height="11" rx="2" fill="#7DA6FF"/><text x="1142" y="401" text-anchor="end" font-size="11.5" fill="#9aa6c4">đi</text><rect x="1150" y="407" width="31" height="11" rx="2" fill="#7DA6FF"/><text x="1142" y="416" text-anchor="end" font-size="11.5" fill="#9aa6c4">đang ngã</text><rect x="1150" y="422" width="161" height="11" rx="2" fill="#FF7A7A"/><text x="1142" y="431" text-anchor="end" font-size="11.5" fill="#9aa6c4">đã ngã</text><rect x="1150" y="437" width="5" height="11" rx="2" fill="#7DA6FF"/><text x="1142" y="446" text-anchor="end" font-size="11.5" fill="#9aa6c4">ngồi xuống</text><rect x="1150" y="452" width="8" height="11" rx="2" fill="#7DA6FF"/><text x="1142" y="461" text-anchor="end" font-size="11.5" fill="#9aa6c4">đang ngồi</text><rect x="1150" y="467" width="5" height="11" rx="2" fill="#7DA6FF"/><text x="1142" y="476" text-anchor="end" font-size="11.5" fill="#9aa6c4">nằm xuống</text><rect x="1150" y="482" width="16" height="11" rx="2" fill="#7DA6FF"/><text x="1142" y="491" text-anchor="end" font-size="11.5" fill="#9aa6c4">đang nằm</text><rect x="1150" y="497" width="5" height="11" rx="2" fill="#7DA6FF"/><text x="1142" y="506" text-anchor="end" font-size="11.5" fill="#9aa6c4">đứng dậy</text><rect x="1150" y="512" width="5" height="11" rx="2" fill="#7DA6FF"/><text x="1142" y="521" text-anchor="end" font-size="11.5" fill="#9aa6c4">đang đứng</text><rect x="1150" y="527" width="10" height="11" rx="2" fill="#7DA6FF"/><text x="1142" y="536" text-anchor="end" font-size="11.5" fill="#9aa6c4">khác</text>
+  <text x="1050" y="565" font-size="16" fill="#9aa6c4">Sau "đang ngã": cộng điểm "đã ngã"</text>
+  <text x="1050" y="583" font-size="16" fill="#9aa6c4">trong 5 s, bán rã 1 s · 0 tham số học</text>
+  <line x1="1160" y1="700" x2="1390" y2="700" stroke="#9aa6c4" stroke-width="1"/>
+  <path d="M1160.0 630.0 L1164.4 634.7 L1168.8 639.1 L1173.2 643.1 L1177.6 646.9 L1182.0 650.5 L1186.4 653.8 L1190.8 656.9 L1195.2 659.8 L1199.6 662.5 L1204.0 665.0 L1208.4 667.3 L1212.8 669.5 L1217.2 671.6 L1221.6 673.5 L1226.0 675.3 L1230.4 676.9 L1234.8 678.5 L1239.2 679.9 L1243.6 681.2 L1248.0 682.5 L1252.4 683.7 L1256.8 684.8 L1261.2 685.8 L1265.6 686.7 L1270.0 687.6 L1274.4 688.5 L1278.8 689.2 L1283.2 689.9 L1287.6 690.6 L1292.0 691.2 L1296.4 691.8 L1300.8 692.4 L1305.2 692.9 L1309.6 693.4 L1314.0 693.8 L1318.4 694.2 L1322.8 694.6 L1327.2 695.0 L1331.6 695.3 L1336.0 695.6 L1340.4 695.9 L1344.8 696.2 L1349.2 696.4 L1353.6 696.7 L1358.0 696.9 L1362.4 697.1 L1366.8 697.3 L1371.2 697.5 L1375.6 697.7 L1380.0 697.8" fill="none" stroke="#5EEAD4" stroke-width="3"/>
+  <text x="1160" y="720" font-size="13" fill="#9aa6c4">0 s</text><text x="1380" y="720" font-size="13" fill="#9aa6c4">5 s</text>
+  <rect x="1250" y="600" width="140" height="34" rx="17" fill="#FF7A7A"/>
+  <text x="1320" y="622" text-anchor="middle" font-size="17" font-weight="700" fill="#04060E">BÁO ĐỘNG</text>
+</svg></div>
+</section>
+
+<section class="slide" data-part="Phương pháp">
+  <div class="eyebrow">Hậu xử lý</div>
   <h2>Quy tắc chuyển trạng thái và ba phương án so sánh</h2>
-  <div class="eq">p̃ₜ = (1 − w)·pₜ + w·eₛ ,   w(Δt) = 2^(−Δt/τ) ,   0 &lt; Δt ≤ W    (τ = 1 s, W = 5 s)</div>
-  <div class="card" style="flex:none"><table>
-    <thead><tr><th>Phương pháp</th><th>Tham số học</th><th>Dùng nhãn ItW-train</th><th>Chỉnh trên val</th></tr></thead>
+  <div class="panel" style="flex:none"><p class="body mono" style="font-size:26px">p̃ₜ = (1 − w)·pₜ + w·eₛ ,  w(Δt) = 2^(−Δt/τ) ,  0 &lt; Δt ≤ W   <span class="t-teal">(τ = 1 s, W = 5 s)</span></p></div>
+  <div class="panel" style="flex:none"><table class="data">
+    <thead><tr><th>Phương pháp</th><th>Tham số học</th><th>Nhãn ItW-train</th><th>Chỉnh trên val</th></tr></thead>
     <tbody>
       <tr class="hl"><td>Quy tắc chuyển trạng thái (chọn)</td><td>0</td><td>Không</td><td>τ, W, bước nhảy</td></tr>
-      <tr><td>Bộ lọc HMM</td><td>0 (A đếm từ train dựng + tổng hợp)</td><td>Không</td><td>self-loop, độ sắc s</td></tr>
+      <tr><td>Bộ lọc HMM</td><td>0 (A đếm từ train dựng + tổng hợp)</td><td>Không</td><td>self-loop, độ sắc</td></tr>
       <tr><td>Hybrid attention</td><td>1 lớp attention nhỏ</td><td>Tuỳ chọn</td><td>λ_KL</td></tr>
       <tr><td>Fine-tune Transformer</td><td>14.8M</td><td>Có</td><td>lr, λ_L2-SP</td></tr>
     </tbody></table></div>
-  <p class="small">Quy tắc không có trọng số học; mục tiêu “đang ngã → đã ngã” lấy từ định nghĩa nhãn, τ và W chọn trên val.</p>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 5 · Thực nghiệm</div>
-  <h2>Fine-tune trên 165 video thật, dò 225 cấu hình trên tập val</h2>
-  <div class="row c46">
-    <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
-      <div class="card oc"><h3>Cấu hình huấn luyện</h3><ul class="small"><li>lr 5×10⁻⁴, λ_L2-SP = 0</li><li>30 epoch, batch 32, label smoothing 0.1</li><li>3 seed 42 / 43 / 44, epoch tốt nhất 25 / 21 / 28</li><li>PyTorch + Hugging Face Transformers</li></ul></div>
-      <div class="card in"><h3>225 cấu hình</h3><p class="small">15 fine-tune · 42 quy tắc · 48 HMM · 120 hậu xử lý streaming.</p></div>
+<section class="slide" data-part="Thực nghiệm">
+  <div class="eyebrow">Pipeline mô hình</div>
+  <h2>Pipeline huấn luyện: 6 bước, tập test chỉ được chạm đúng một lần</h2>
+  <div class="tp">
+    <div class="tps"><div class="tpn">1</div><div class="kicker">Học nền</div><h3>Mô hình gốc</h3><p class="small">Transformer học trên 12.000 video tổng hợp + 3 bộ diễn viên đóng (checkpoint OmniFall)</p><div class="dtag d-src">video dựng</div></div>
+    <div class="tpa">→</div>
+    <div class="tps hot"><div class="tpn">2</div><div class="kicker">Fine-tune</div><h3>Học video thật</h3><p class="small">30 epoch × 3 seed, tăng cường thời gian + 3 góc ảnh</p><div class="dtag d-tr">165 video train</div></div>
+    <div class="tpa">→</div>
+    <div class="tps"><div class="tpn">3</div><div class="kicker">Dừng sớm</div><h3>Chọn epoch</h3><p class="small">Giữ epoch có (F1 đã ngã + F1 gộp) / 2 cao nhất</p><div class="dtag d-va">81 video val</div></div>
+    <div class="tpa">→</div>
+    <div class="tps"><div class="tpn">4</div><div class="kicker">Tối ưu</div><h3>Dò 225 cấu hình</h3><p class="small">lr, L2-SP, quy tắc, HMM, Hybrid, chế độ chạy như camera</p><div class="dtag d-va">81 video val</div></div>
+    <div class="tpa">→</div>
+    <div class="tps"><div class="tpn">5</div><div class="kicker">Chấm điểm</div><h3>Test một lần</h3><p class="small">Cấu hình tốt nhất được khoá lại rồi mới chấm, chạy như camera</p><div class="dtag d-te">572 video test</div></div>
+    <div class="tpa">→</div>
+    <div class="tps"><div class="tpn">6</div><div class="kicker">Triển khai</div><h3>Chạy realtime</h3><p class="small">Webcam / video, 3 luồng song song, 40–47 ms mỗi lần</p><div class="dtag d-cam">camera</div></div>
+  </div>
+  <div class="tplegend">
+    <span><i class="d-src"></i>Video dựng: chỉ để học nền</span>
+    <span><i class="d-tr"></i>Train: 165 video thật (20%)</span>
+    <span><i class="d-va"></i>Val: 81 video (10%), mọi lựa chọn</span>
+    <span><i class="d-te"></i>Test: 572 video (70%), chấm 1 lần</span>
+  </div>
+</section>
+
+<section class="slide" data-part="Thực nghiệm">
+  <div class="eyebrow">Fine-tune</div>
+  <h2>Fine-tune trên video tai nạn thật: "đã ngã" từ 24.7 lên 44.1</h2>
+  <div class="grid g-62">
+    <div class="col">
+      <div class="ftrow">
+        <div class="panel col"><div class="kicker">Trước fine-tune</div><div class="big" style="color:var(--muted)">24.7</div><div class="small">F1 "đã ngã", mô hình chỉ học video dựng</div></div>
+        <div class="ftarr">→</div>
+        <div class="panel col" style="border-color:var(--blue)"><div class="kicker t-blue">Sau fine-tune</div><div class="big t-blue">44.1</div><div class="small">trung bình 3 lần huấn luyện (± 2.6)</div></div>
+        <div class="panel col" style="border-color:var(--teal)"><div class="kicker t-teal">Mức tăng</div><div class="big t-teal">+19.4</div><div class="small">gần gấp đôi</div></div>
+      </div>
+      <div class="panel col"><div class="kicker">Chiến lược huấn luyện</div>
+        <ul class="clean small two">
+          <li><b>Khởi tạo</b> từ checkpoint St+Sy (7.000 bước)</li>
+          <li><b>Dữ liệu</b>: 165 video thật, 809 đoạn có nhãn</li>
+          <li><b>Tăng cường</b>: ngẫu nhiên thời gian + trái / giữa / phải</li>
+          <li><b>Chống quên</b>: thử phạt L2-SP; làm mềm nhãn 0.1</li>
+          <li><b>Dừng sớm</b> theo (F1 đã ngã + F1 gộp) / 2 trên 81 video val</li>
+          <li><b>3 hạt giống</b> ngẫu nhiên, báo cáo trung bình ± độ lệch</li>
+        </ul></div>
     </div>
-    <div class="fig"><img src="../figs/fig5_grid.png" alt="Lưới fine-tune"><div class="cap">Điểm val theo lr và L2-SP: tăng từ 54.2 lên 62.2, bão hoà từ 2×10⁻⁴.</div></div>
+    <div class="panel col"><div class="kicker">Kết quả trên 572 video thi (3 lần)</div>
+      <table class="data">
+        <thead><tr><th>Lần</th><th class="n">Đã ngã</th><th class="n">Đang ngã</th></tr></thead>
+        <tbody>
+          <tr><td>Seed 42</td><td class="n">41.1</td><td class="n">59.6</td></tr>
+          <tr><td>Seed 43</td><td class="n">46.0</td><td class="n">58.3</td></tr>
+          <tr><td>Seed 44</td><td class="n">45.2</td><td class="n">58.1</td></tr>
+          <tr class="hl"><td>+ nhìn 3 góc</td><td class="n">45.6</td><td class="n">59.8</td></tr>
+        </tbody>
+      </table>
+      <p class="small">Cả 3 lần đều vượt xa mô hình gốc: cải thiện không phụ thuộc may rủi.</p>
+    </div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 5 · Cách đánh giá</div>
-  <h2>Hai cách chấm, streaming là giao thức chính vì giống camera thật</h2>
-  <div class="row c2">
-    <div class="card"><h3>Theo segment (giao thức OmniFall)</h3><ul class="small"><li>Một dự đoán cho mỗi segment (2.804 segment test)</li><li>18 vector đặt giữa segment</li><li>Rò rỉ ranh giới: 92.3% segment liền kề khác nhãn, nên HMM đạt 51.3 nhưng không triển khai được</li></ul></div>
-    <div class="card st"><h3>Streaming (giao thức chính)</h3><ul class="small"><li>Dự đoán mỗi 0.133 s, khoảng 31.000 bước, 1.17 giờ video</li><li>Chỉ dùng 18 vector quá khứ, so nhãn tại t − 2.2 s</li><li>Đo thêm báo động: 310 lần “đã ngã”, số báo động sai mỗi giờ</li></ul></div>
+<section class="slide" data-part="Thực nghiệm">
+  <div class="eyebrow">Tối ưu tham số</div>
+  <h2>Tune có hệ thống: thử 225 cấu hình, chọn bằng video riêng, không nhìn đề thi</h2>
+  <div class="grid g-62">
+    <div class="panel col">
+      <div class="kicker">Học thêm video thật: điểm trên 81 video kiểm tra theo tốc độ học (lr) và mức giữ mô hình gốc (λ)</div>
+      <div class="hm">
+        <div class="hm-h"></div>
+        <div class="hm-h">λ = 0</div>
+        <div class="hm-h">λ = 0.001</div>
+        <div class="hm-h">λ = 0.01</div>
+        <div class="hm-h">lr 1e-5</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.23)">55.2</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.22)">55.1</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.14)">54.2</div>
+        <div class="hm-h">lr 3e-5</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.42)">57.1</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.43)">57.3</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.33)">56.2</div>
+        <div class="hm-h">lr 1e-4</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.71)">60.3</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.58)">58.9</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.52)">58.3</div>
+        <div class="hm-h">lr 2e-4</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.87)">62.0</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.71)">60.3</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.55)">58.6</div>
+        <div class="hm-h">lr 5e-4</div>
+        <div class="hm-c hm-best" style="background:rgba(94,234,212,0.89)">62.2</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.81)">61.3</div>
+        <div class="hm-c" style="background:rgba(94,234,212,0.73)">60.5</div>
+      </div>
+      <p class="small">Ô sáng nhất (lr 5e-4, λ = 0) được chọn, rồi huấn luyện lại 3 lần để chắc kết quả ổn định.</p>
+    </div>
+    <div class="col">
+      <div class="panel col"><div class="kicker">Công thức huấn luyện</div>
+        <ul class="clean small"><li>AdamW, 30 vòng, lô 32</li><li>Làm mềm nhãn 0.1</li><li>Cắt ngẫu nhiên thời gian + trái / giữa / phải</li><li>Giữ vòng có điểm kiểm tra cao nhất</li></ul></div>
+      <div class="panel col"><div class="kicker">Số cấu hình đã thử</div>
+        <ul class="clean small"><li><b>15</b> cấu hình học thêm video thật</li><li><b>42</b> quy tắc · <b>48</b> HMM · <b>120</b> khi chạy như camera</li></ul></div>
+    </div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 6 · Kết quả chính</div>
-  <h2>Hệ thống cuối vượt hệ thống cũ 12–17 điểm F1 khi chạy như camera</h2>
-  <div class="row c3" style="flex:none">
-    <div class="card st"><div class="k">F1 đã ngã</div><div class="num">44.3</div><div class="up">+12.4  (cũ 31.9)</div></div>
-    <div class="card oc"><div class="k">F1 đang ngã</div><div class="num">62.0</div><div class="up">+16.5  (cũ 45.5)</div></div>
-    <div class="card sg"><div class="k">F1 gộp</div><div class="num">69.3</div><div class="up">+12.5  (cũ 56.8)</div></div>
-  </div>
-  <div class="row c4" style="flex:none">
-    <div class="card"><div class="num s">26.3→44.1</div><div class="small">F1 đã ngã theo segment nhờ fine-tune</div></div>
-    <div class="card"><div class="num s">+3.5</div><div class="small">F1 đã ngã từ TTA + quy tắc, KTC [+1.2, +5.9]</div></div>
-    <div class="card"><div class="num s">p ≤ 0.008</div><div class="small">McNemar, cả 3 seed</div></div>
-    <div class="card"><div class="num s">41.6%</div><div class="small">ca ngã được báo động (ngưỡng 0.5 s, trễ 2.6 s)</div></div>
-  </div>
-</section>
-
-<section class="slide">
-  <div class="chap">Chặng 6 · Kết quả streaming</div>
-  <h2>Chỉ quy tắc trên mô hình fine-tune tăng cả ba chỉ số</h2>
-  <div class="row c64">
-    <div class="card"><table>
-      <thead><tr><th>Bộ phân loại</th><th>Hậu xử lý</th><th class="n">Đã ngã</th><th class="n">Đang ngã</th><th class="n">Gộp</th></tr></thead>
-      <tbody>
-        <tr class="dim"><td>Gốc</td><td>Không</td><td class="n">31.9</td><td class="n">45.5</td><td class="n">56.8</td></tr>
-        <tr class="dim"><td>Gốc</td><td>HMM</td><td class="n">38.3</td><td class="n">33.0</td><td class="n">49.9</td></tr>
-        <tr class="dim"><td>Gốc</td><td>Hybrid</td><td class="n">37.0</td><td class="n">37.2</td><td class="n">53.1</td></tr>
-        <tr><td>Fine-tune</td><td>Không</td><td class="n">40.8</td><td class="n">60.4</td><td class="n">67.7</td></tr>
-        <tr><td>Fine-tune</td><td>TTA</td><td class="n">42.7</td><td class="n">60.9</td><td class="n">68.4</td></tr>
-        <tr><td>Fine-tune</td><td>HMM</td><td class="n">44.2</td><td class="n">53.4</td><td class="n">62.3</td></tr>
-        <tr><td>Fine-tune</td><td>Hybrid</td><td class="n">45.7</td><td class="n">56.1</td><td class="n">66.2</td></tr>
-        <tr class="hl"><td>Fine-tune</td><td>TTA + quy tắc</td><td class="n">44.3</td><td class="n">62.0</td><td class="n">69.3</td></tr>
-      </tbody></table></div>
-    <div class="fig"><img src="../figs/fig6_stream.png" alt="F1 streaming"><div class="cap">F1 streaming các hệ thống chính.</div></div>
+<section class="slide" data-part="Thực nghiệm">
+  <div class="eyebrow">Cách chấm điểm <span class="tc">09</span></div>
+  <h2>Chấm điểm như camera thật mới là cách đánh giá công bằng</h2>
+  <div class="grid g2" style="align-items:start">
+    <div class="panel col">
+      <div class="kicker">Cách chấm cũ</div>
+      <ul class="clean"><li>Video đã được cắt sẵn đúng chỗ đổi hành động</li><li>Mô hình được nhìn cả đoạn phía sau</li><li>Kết quả đẹp (tới <b class="t-fallen">51.3</b>) nhưng camera thật không có thông tin này</li></ul>
+    </div>
+    <div class="panel col" style="border-color:var(--teal)">
+      <div class="kicker t-teal">Cách chấm mới: như camera thật</div>
+      <ul class="clean"><li>Dự đoán liên tục 7.5 lần mỗi giây</li><li>Chỉ dùng hình ảnh đã xảy ra</li><li>Đếm cả số lần báo động đúng và báo động nhầm</li></ul>
+    </div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 6 · Phân tích lỗi</div>
-  <h2>Fine-tune giảm nhầm “đã ngã” sang các lớp khác</h2>
-  <div class="row c46">
-    <div class="card"><table style="font-size:21px">
-      <thead><tr><th>Theo segment</th><th class="n">Đã ngã</th><th class="n">Gộp</th></tr></thead>
-      <tbody>
-        <tr class="dim"><td>Baseline ngẫu nhiên</td><td class="n">24.7</td><td class="n">55.1</td></tr>
-        <tr class="dim"><td>Baseline cố định</td><td class="n">26.3</td><td class="n">55.9</td></tr>
-        <tr><td>Quy tắc τ=2, W=3</td><td class="n">32.0</td><td class="n">55.4</td></tr>
-        <tr><td>Hybrid v8</td><td class="n">32.8</td><td class="n">56.7</td></tr>
-        <tr class="hl"><td>Fine-tune</td><td class="n">44.1</td><td class="n">66.0</td></tr>
-        <tr><td>Fine-tune + TTA</td><td class="n">46.1</td><td class="n">66.2</td></tr>
-      </tbody></table>
-      <p class="small">Recall “đã ngã” 20.4% → 46.1%; nhầm sang lớp khác 39.0% → 30.0%.</p></div>
-    <div class="fig"><img src="../figs/fig7_confusion.png" alt="Ma trận nhầm lẫn"><div class="cap">Recall theo hàng (%) cho các lớp liên quan đến ngã.</div></div>
+<section class="slide" data-part="Kết quả">
+  <div class="eyebrow">Kết quả tổng kết</div>
+  <h2>Hệ thống cuối tốt hơn hệ thống cũ 12–17 điểm F1 khi chạy như camera thật</h2>
+  <div class="grid g3" style="flex:none">
+    <div class="panel col"><div class="kicker">F1 "đã ngã"</div><div class="big t-fallen">44.3</div><div class="small">trước đây 31.9 · <b class="t-teal">+12.4</b></div></div>
+    <div class="panel col"><div class="kicker">F1 "đang ngã"</div><div class="big t-fall">62.0</div><div class="small">trước đây 45.5 · <b class="t-teal">+16.5</b></div></div>
+    <div class="panel col"><div class="kicker">F1 gộp</div><div class="big t-teal">69.3</div><div class="small">trước đây 56.8 · <b class="t-teal">+12.5</b></div></div>
+  </div>
+  <div class="grid g4" style="flex:none">
+    <div class="panel col"><div class="mid t-blue">26.3→44.1</div><div class="small">F1 "đã ngã" theo segment nhờ fine-tune 165 video thật</div></div>
+    <div class="panel col"><div class="mid t-teal">p≤0.008</div><div class="small">cả 3 seed đều có ý nghĩa thống kê</div></div>
+    <div class="panel col"><div class="mid">40–47ms</div><div class="small">mỗi bước suy luận, RTX 3070</div></div>
+    <div class="panel col"><div class="mid">225</div><div class="small">cấu hình dò trên val, test chấm đúng 1 lần</div></div>
+  </div>
+  <p class="note">Đánh giá trên 572 video tai nạn thật (OF-ItW test), dự đoán mỗi 0.133 s, chỉ nhìn quá khứ.</p>
+</section>
+
+<section class="slide" data-part="Kết quả">
+  <div class="eyebrow">Chạy như camera <span class="tc">11</span></div>
+  <h2>Chạy như camera: hệ thống mới hơn hệ thống cũ 12–17 điểm</h2>
+  <div class="grid g-62">
+    <div class="panel col"><div class="kicker">Điểm F1 khi chạy như camera thật</div><div class="chart" id="c-stream"></div></div>
+    <div class="col">
+      <p class="body">Hệ thống mới: học thêm video thật + nhìn đủ khung hình + quy tắc "sau cú ngã là nằm".</p>
+      <p class="body">Kết quả: <b class="t-teal">44.3 / 62.0 / 69.3</b>, so với 31.9 / 45.5 / 56.8 trước đây.</p>
+      <p class="small">Cả ba mức tăng đều được kiểm chứng thống kê.</p>
+    </div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 6 · Báo động và kiểm định</div>
-  <h2>Cải thiện có ý nghĩa thống kê, không phải do may mắn</h2>
-  <div class="row c2">
-    <div class="fig"><img src="../figs/fig8_alarm.png" alt="Đánh đổi báo động"><div class="cap">~20 báo động sai/giờ: fine-tune bắt 16.8% ca ngã, hệ thống gốc khoảng 12%.</div></div>
-    <div class="fig"><img src="../figs/fig9_ci.png" alt="Khoảng tin cậy bootstrap"><div class="cap">Bootstrap 10.000 lần theo video: 3 seed tăng 14.8–19.7 điểm, khoảng tin cậy không chứa 0.</div></div>
+<section class="slide" data-part="Kết quả">
+  <div class="eyebrow">Bảng kết quả đầy đủ</div>
+  <h2>Chỉ có quy tắc trên mô hình đã fine-tune tăng cả 3 chỉ số cùng lúc</h2>
+  <div class="panel" style="flex:none"><table class="data">
+    <thead><tr><th>Bộ phân loại</th><th>Hậu xử lý</th><th class="n">Đã ngã</th><th class="n">Đang ngã</th><th class="n">Gộp</th></tr></thead>
+    <tbody>
+      <tr><td>Gốc</td><td>Không</td><td class="n">31.9</td><td class="n">45.5</td><td class="n">56.8</td></tr>
+      <tr><td>Gốc</td><td>HMM</td><td class="n">38.3</td><td class="n">33.0</td><td class="n">49.9</td></tr>
+      <tr><td>Gốc</td><td>Hybrid (3 seed)</td><td class="n">37.0 ± 0.7</td><td class="n">37.2 ± 3.0</td><td class="n">53.1 ± 1.6</td></tr>
+      <tr><td>Fine-tune</td><td>Không</td><td class="n">40.8</td><td class="n">60.4</td><td class="n">67.7</td></tr>
+      <tr><td>Fine-tune</td><td>TTA không gian</td><td class="n">42.7</td><td class="n">60.9</td><td class="n">68.4</td></tr>
+      <tr><td>Fine-tune</td><td>HMM</td><td class="n">44.2</td><td class="n">53.4</td><td class="n">62.3</td></tr>
+      <tr><td>Fine-tune</td><td>Hybrid (3 seed)</td><td class="n">45.7 ± 1.3</td><td class="n">56.1 ± 3.4</td><td class="n">66.2 ± 1.9</td></tr>
+      <tr class="hl"><td>Fine-tune</td><td>TTA + quy tắc (cuối)</td><td class="n">44.3</td><td class="n">62.0</td><td class="n">69.3</td></tr>
+    </tbody></table></div>
+  <p class="note">HMM và Hybrid tăng "đã ngã" bằng cách đoán "đã ngã" nhiều hơn, nhưng mất 6–12 điểm "đang ngã".</p>
+</section>
+
+<section class="slide" data-part="Kết quả">
+  <div class="eyebrow">Kết quả <span class="tc">10</span></div>
+  <h2>Huấn luyện thêm trên video thật giúp tăng mạnh nhất</h2>
+  <div class="grid g2">
+    <div class="panel col"><div class="kicker">Điểm F1 "đã ngã"</div><div class="chart" id="c-seg-fallen"></div></div>
+    <div class="panel col"><div class="kicker">Điểm F1 "đang ngã hoặc đã ngã"</div><div class="chart" id="c-seg-union"></div></div>
+  </div>
+  <p class="note">Thanh ngang nhỏ: mức dao động giữa các lần huấn luyện.</p>
+</section>
+
+<section class="slide" data-part="Kết quả">
+  <div class="eyebrow">Báo động <span class="tc">12</span></div>
+  <h2>Báo động: ở cùng số lần báo nhầm, hệ thống mới bắt được nhiều ca ngã hơn</h2>
+  <div class="grid g-62">
+    <div class="panel col"><div class="kicker">Trục ngang: số lần báo nhầm mỗi giờ · trục dọc: % ca ngã được báo</div><div class="chart" id="c-alarm"></div></div>
+    <div class="col">
+      <div class="panel col"><div class="mid t-blue">16.8%</div><div class="small">ca ngã được báo khi chỉ cho phép khoảng 20 lần báo nhầm mỗi giờ (hệ thống cũ: 12%)</div></div>
+      <p class="small">Có thể chỉnh độ nhạy: nhạy hơn thì bắt được nhiều ca hơn nhưng báo nhầm nhiều hơn.</p>
+
+    </div>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 6 · Ứng dụng</div>
-  <h2>Ứng dụng giám sát thời gian thực</h2>
-  <div class="row c4" style="flex:none">
-    <div class="card st"><div class="num s">40–47 ms</div><div class="small">mỗi bước, dưới chu kỳ 133 ms</div></div>
-    <div class="card oc"><div class="num s">2.9 ms</div><div class="small">tiền xử lý GPU / khung (CPU 7.2 ms)</div></div>
-    <div class="card sg"><div class="num s">0.9998</div><div class="small">cosine đặc trưng GPU so với CPU</div></div>
-    <div class="card in"><div class="num s">98.7%</div><div class="small">dự đoán giống hệt bản CPU</div></div>
-  </div>
-  <div class="card"><h3>Cách hoạt động</h3><ul class="small"><li>Nhận webcam hoặc file video; 3 luồng song song: đọc khung → trích đặc trưng → phân loại + quy tắc.</li><li>Hiển thị xác suất 10 lớp theo thời gian, bật cảnh báo khi “đã ngã” kéo dài quá ngưỡng.</li><li>Đã chạy thử trên file video; chưa thử với camera thật trong nhà.</li></ul></div>
+<section class="slide" data-part="Kết quả">
+  <div class="eyebrow">Kiểm chứng <span class="tc">13</span></div>
+  <h2>Kiểm chứng thống kê: cải thiện là thật, không phải do may mắn</h2>
+  <div class="panel col" style="flex:1"><div class="kicker">Mức thay đổi điểm F1 · vạch nằm hẳn bên phải số 0 là cải thiện chắc chắn</div><div class="chart" id="c-forest"></div></div>
 </section>
 
-<section class="slide">
-  <div class="chap">Chặng 7 · Thảo luận</div>
-  <h2>Ba bài học rút ra</h2>
-  <div class="row c3">
-    <div class="card st"><div class="num s">01</div><h3>Nút thắt là bộ phân loại</h3><p class="small">Khi mô hình còn nhầm “đã ngã”, mọi prior thời gian chỉ đổi lỗi này lấy lỗi khác.</p></div>
-    <div class="card oc"><div class="num s">02</div><h3>Dữ liệu đúng miền rất quý</h3><p class="small">Chỉ 165 clip thật, cùng tăng cường và chọn mô hình cẩn thận, gần gấp đôi F1 “đã ngã”.</p></div>
-    <div class="card sg"><div class="num s">03</div><h3>Cách đánh giá quyết định kết luận</h3><p class="small">Chấm theo segment ưu ái phương pháp khai thác ranh giới nhãn; streaming mới phản ánh triển khai.</p></div>
+<section class="slide" data-part="Kết quả">
+  <div class="eyebrow">Tối ưu tốc độ</div>
+  <h2>Đưa tiền xử lý lên GPU: nhanh gấp 2.5 lần, kết quả gần như y hệt</h2>
+  <div class="grid g3" style="flex:none">
+    <div class="panel col"><div class="kicker">Tiền xử lý mỗi ảnh</div><div class="big t-teal">2.9 ms</div><div class="small">trên GPU, so với 7.2 ms trên CPU</div></div>
+    <div class="panel col"><div class="kicker">Giống bản gốc</div><div class="big t-blue">0.9998</div><div class="small">độ tương đồng cosine của vector đặc trưng</div></div>
+    <div class="panel col"><div class="kicker">Cùng dự đoán</div><div class="big">98.7%</div><div class="small">số khung hình ra cùng nhãn với bản gốc (1.831 ảnh, 20 video)</div></div>
   </div>
-</section>
-
-<section class="slide">
-  <div class="chap">Chặng 7 · Kết luận</div>
-  <h2>Kết luận, hạn chế và hướng phát triển</h2>
-  <div class="row c3">
-    <div class="card sg"><h3>Kết luận</h3><p class="small">Sửa dữ liệu + fine-tune trên clip thật + quy tắc không cần huấn luyện cho hệ thống triển khai tốt nhất: 44.3 / 62.0 / 69.3, hơn hệ thống cũ 12–17 điểm, chạy thời gian thực.</p></div>
-    <div class="card st"><h3>Hạn chế</h3><ul class="small"><li>Chưa trích lại đặc trưng huấn luyện nền (dữ liệu cũ đã xoá)</li><li>Chỉ có 3/8 bộ dàn dựng</li><li>Tập val nhỏ (46 segment “đã ngã”)</li><li>Báo động sai đo trên clip internet ngắn</li></ul></div>
-    <div class="card in"><h3>Hướng phát triển</h3><ul class="small"><li>Trích lại đặc trưng, huấn luyện chung 3 miền</li><li>Huấn luyện trên cửa sổ nhân quả</li><li>Cắt ảnh theo người phát hiện được</li><li>Hiệu chỉnh ngưỡng trên camera trong nhà</li></ul></div>
+  <div class="panel col"><div class="kicker">Ngân sách thời gian cho một lần dự đoán (cứ 133 ms có một ảnh mới)</div>
+    <div class="budget">
+      <div class="bseg" style="width:33%;background:var(--teal)">40–47 ms · toàn bộ mô hình + 3 góc</div>
+      <div class="bseg" style="width:67%;background:rgba(233,239,251,.08);color:var(--muted)">còn dư khoảng 90 ms</div>
+    </div>
+    <p class="small">Đọc camera, chạy mô hình và vẽ cảnh báo chạy trên 3 luồng song song, nên hệ thống theo kịp thời gian thực.</p>
   </div>
 </section>
 
-<section class="slide">
-  <div class="chap">Quản lý dự án</div>
+<section class="slide" data-part="Kết luận">
+  <div class="eyebrow">Bài học và hạn chế</div>
+  <h2>Ba bài học từ dự án</h2>
+  <div class="grid g3" style="flex:none">
+    <div class="panel col"><div class="kicker t-teal">1 · Nút thắt</div><p class="small" style="font-size:21px">Nút thắt là bộ phân loại. Mô hình còn nhầm thì hậu xử lý chỉ đổi lỗi này lấy lỗi khác.</p></div>
+    <div class="panel col"><div class="kicker t-teal">2 · Dữ liệu đúng miền</div><p class="small" style="font-size:21px">Chỉ 165 video thật đã gần gấp đôi F1 "đã ngã".</p></div>
+    <div class="panel col"><div class="kicker t-teal">3 · Cách đánh giá</div><p class="small" style="font-size:21px">Chấm theo segment cho HMM 51.3 nhưng không triển khai được; chấm như camera mới phản ánh thực tế.</p></div>
+  </div>
+  <div class="panel col" style="flex:none"><div class="kicker">Hạn chế</div><p class="small" style="font-size:19px">Chưa trích lại đặc trưng huấn luyện nền với cách lấy mẫu mới; chỉ có 3/8 bộ dàn dựng; tập val nhỏ (46 segment "đã ngã"); chưa thử trên camera trong nhà.</p></div>
+</section>
+
+<section class="slide finale" data-part="Kết luận">
+  <div class="planet" aria-hidden="true" style="width:520px;height:520px;right:-120px;bottom:-300px;background:radial-gradient(circle at 32% 26%, #5EEAD4 0%, #2B7F9E 24%, #173A6B 50%, #0A1530 74%, #04060E 100%)"></div><div class="ring" aria-hidden="true" style="width:900px;height:170px;right:-300px;bottom:30px"></div>
+  <div class="eyebrow">Kết luận <span class="tc">16</span></div>
+  <h2 style="font-size:64px;max-width:1350px">Biết "sau cú ngã là nằm" chỉ có ích khi mô hình đủ tốt</h2>
+  <div class="grid g3" style="flex:none">
+    <div class="panel col"><div class="kicker">Dữ liệu</div><p class="small" style="font-size:21px">Sửa 3 lỗi: lệch thời gian, cắt mất khung hình, chấm điểm không ổn định.</p></div>
+    <div class="panel col"><div class="kicker">Kết quả</div><p class="small" style="font-size:21px">Chạy như camera: 44.3 / 62.0 / 69.3, cao hơn hệ thống cũ 12–17 điểm.</p></div>
+    <div class="panel col"><div class="kicker">Tiếp theo</div><p class="small" style="font-size:21px">Huấn luyện lại với đầy đủ dữ liệu và thử trên camera trong nhà.</p></div>
+  </div>
+  <p class="small" style="margin-top:auto">Mã nguồn: github.com/WuneCutee/omnifall-conditioning · Báo cáo web: wunecutee.github.io/omnifall-report4</p>
+</section>
+
+<section class="slide" data-part="Kết luận">
+  <div class="eyebrow">Quản lý dự án</div>
   <h2>Phân công và kế hoạch thực hiện</h2>
-  <div class="card" style="flex:none;padding:16px 26px"><table style="font-size:20px">
+  <div class="panel" style="flex:none"><table class="data" style="font-size:17px">
     <thead><tr><th>Công việc</th><th>Phụ trách</th><th>Thời gian</th><th>Trạng thái</th></tr></thead>
     <tbody>
       <tr><td>Đọc paper, code, benchmark OmniFall</td><td>Nguyễn Duy Quân</td><td>15/09 – 21/09</td><td>Xong</td></tr>
@@ -415,60 +749,358 @@ html::view-transition{background:#2a1f17}
     </tbody></table></div>
 </section>
 
-<section class="slide">
-  <div class="chap">Tài liệu tham khảo</div>
+<section class="slide" data-part="Kết luận">
+  <div class="eyebrow">Tài liệu tham khảo</div>
   <h2>Tài liệu tham khảo chính</h2>
-  <ol class="small" style="margin:0;padding-left:34px;display:flex;flex-direction:column;gap:6px">
-    <li>OmniFall: benchmark phát hiện ngã thống nhất từ dữ liệu dàn dựng, tổng hợp và thật (Hugging Face: simplexsigil2/omnifall).</li>
+  <ol class="small" style="margin:0;padding-left:28px;display:flex;flex-direction:column;gap:6px;font-size:18px">
+    <li>OmniFall benchmark (Hugging Face: simplexsigil2/omnifall).</li>
     <li>Z. Tong et al., “VideoMAE: Masked autoencoders are data-efficient learners for self-supervised video pre-training,” NeurIPS, 2022.</li>
-    <li>D. Epstein, B. Chen and C. Vondrick, “Oops! Predicting unintentional action in video,” CVPR, 2020.</li>
+    <li>D. Epstein, B. Chen, C. Vondrick, “Oops! Predicting unintentional action in video,” CVPR, 2020.</li>
     <li>J. C. Eraso Guerrero et al., “Dataset for human fall recognition in an uncontrolled environment (CAUCAFall),” Data in Brief, 2022.</li>
     <li>E. Alam et al., “GMDCSA-24: A dataset for human fall detection in videos,” Data in Brief, 2024.</li>
-    <li>Y. A. Farha and J. Gall, “MS-TCN: Multi-stage temporal convolutional network for action segmentation,” CVPR, 2019.</li>
+    <li>Y. A. Farha, J. Gall, “MS-TCN: Multi-stage temporal convolutional network for action segmentation,” CVPR, 2019.</li>
     <li>L. R. Rabiner, “A tutorial on hidden Markov models and selected applications in speech recognition,” Proc. IEEE, 1989.</li>
     <li>A. Vaswani et al., “Attention is all you need,” NeurIPS, 2017.</li>
-    <li>X. Li, Y. Grandvalet and F. Davoine, “Explicit inductive bias for transfer learning with convolutional networks,” ICML, 2018.</li>
-    <li>B. Efron and R. J. Tibshirani, An Introduction to the Bootstrap, Chapman &amp; Hall, 1993.</li>
+    <li>X. Li, Y. Grandvalet, F. Davoine, “Explicit inductive bias for transfer learning with convolutional networks,” ICML, 2018.</li>
+    <li>B. Efron, R. J. Tibshirani, An Introduction to the Bootstrap, Chapman &amp; Hall, 1993.</li>
   </ol>
-  <p class="small">Danh sách đầy đủ 23 tài liệu có trong báo cáo Word.</p>
+  <p class="note">Danh sách đầy đủ 23 tài liệu có trong báo cáo Word.</p>
 </section>
 
-<section class="slide cover">
-  <div class="sun" aria-hidden="true"></div>
-  <div class="chap">Report 4 · Kết thúc hành trình</div>
-  <h1 style="margin-top:60px">Cảm ơn thầy và các bạn đã lắng nghe</h1>
+<section class="slide finale" data-part="Kết luận">
+  <div class="planet" aria-hidden="true" style="width:520px;height:520px;right:-120px;bottom:-300px;background:radial-gradient(circle at 32% 26%, #5EEAD4 0%, #2B7F9E 24%, #173A6B 50%, #0A1530 74%, #04060E 100%)"></div><div class="ring" aria-hidden="true" style="width:900px;height:170px;right:-300px;bottom:30px"></div>
+  <div class="eyebrow">Report 4 · Hỏi đáp</div>
+  <h2 style="font-size:72px;max-width:1350px">Cảm ơn thầy và các bạn đã lắng nghe</h2>
   <p class="lead">Rất mong nhận được câu hỏi và góp ý.</p>
-  <div style="margin-top:auto;margin-bottom:150px;font-size:24px;display:flex;flex-direction:column;gap:6px;color:#d9c7a8;position:relative;z-index:1">
-    <div>Mã nguồn: github.com/WuneCutee/omnifall-conditioning</div>
-    <div>Báo cáo web: wunecutee.github.io/omnifall-report4</div>
-  </div>
-  <svg class="dunes" viewBox="0 0 1920 260" preserveAspectRatio="none" aria-hidden="true"><path d="M0 160 Q300 60 640 150 T1300 120 T1920 140 V260 H0Z" fill="#8c3b22" opacity=".55"/><path d="M0 210 Q420 120 860 200 T1920 190 V260 H0Z" fill="#b5532f"/></svg>
+  <p class="small" style="margin-top:auto">Mã nguồn: github.com/WuneCutee/omnifall-conditioning · Báo cáo web: wunecutee.github.io/omnifall-report4</p>
 </section>
 
+<div class="scrub" id="scrub" aria-hidden="true"></div>
 </div></div>
-<div class="pg" id="pg"></div>
-<nav class="nav"><button id="prev" aria-label="Slide trước">‹</button><button id="next" aria-label="Slide sau">›</button></nav>
+<nav class="nav" aria-label="Điều hướng slide">
+  <button id="prev" type="button" aria-label="Slide trước">‹</button>
+  <button id="next" type="button" aria-label="Slide sau">›</button>
+</nav>
+
 <script>
-(function(){
-  const S=[...document.querySelectorAll('.slide')], st=document.getElementById('stage'), pg=document.getElementById('pg');
-  S.forEach((s,i)=>{ if(!s.classList.contains('cover')){const f=document.createElement('div');f.className='foot';f.innerHTML='<span>Report 4 · OmniFall · Báo cáo tổng kết môn học</span><span>'+(i+1)+' / '+S.length+'</span>';s.appendChild(f);} });
-  let i=Math.max(0,Math.min(S.length-1,(parseInt((location.hash.match(/\d+/)||[1])[0])||1)-1));
-  S.forEach(s=>{['.card,.fig,.eq','.stop','tbody tr','ol li','.tag'].forEach(q=>s.querySelectorAll(q).forEach((e,k)=>e.style.setProperty('--i',k)));});
-  S.forEach(s=>s.querySelectorAll('.card,.fig,.eq,.route').forEach((e,k)=>{if(k<12)e.style.viewTransitionName='m'+k;}));
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function countUp(s){if(reduce)return;s.querySelectorAll('.num').forEach(el=>{const t=el.dataset.t||(el.dataset.t=el.textContent);if(!/^\d+(\.\d+)?$/.test(t.trim()))return;const v=parseFloat(t),d=(t.split('.')[1]||'').length,t0=performance.now();
-    (function f(now){const p=Math.min(1,(now-t0)/1100),e=1-Math.pow(1-p,3);el.textContent=(v*e).toFixed(d);if(p<1)requestAnimationFrame(f);else el.textContent=t;})(t0);});}
-  function apply(n){i=n;S.forEach((s,k)=>s.classList.toggle('on',k===i));pg.textContent=(i+1)+' / '+S.length;history.replaceState(null,'','#slide-'+(i+1));countUp(S[i]);}
-  let busy=0;function show(n){if(busy)return;n=Math.max(0,Math.min(S.length-1,n));if(n===i&&S[i].classList.contains('on'))return;
-    document.documentElement.dataset.dir=n>i?'next':'prev';
-    if(document.startViewTransition&&!reduce){busy=1;const t=document.startViewTransition(()=>apply(n));const r=()=>busy=0;t.ready.catch(()=>{});t.finished.then(r,r);setTimeout(r,1150);}else apply(n);}
-  addEventListener('hashchange',()=>{const m=location.hash.match(/\d+/);if(m)show(+m[0]-1);});
-  function fit(){const k=Math.min(innerWidth/1920,innerHeight/1080);st.style.transform='scale('+k+')';}
-  addEventListener("resize",fit);fit();apply(i);
-  addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){show(i+1);e.preventDefault();}if(['ArrowLeft','PageUp'].includes(e.key))show(i-1);if(e.key==='Home')show(0);if(e.key==='End')show(S.length-1);});
-  document.getElementById('next').onclick=()=>show(i+1);document.getElementById('prev').onclick=()=>show(i-1);
-  let x0=null;addEventListener('touchstart',e=>x0=e.touches[0].clientX);addEventListener('touchend',e=>{if(x0==null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>50)show(i+(d<0?1:-1));x0=null;});
+(function(){const v=()=>document.getElementById('exvid');
+function tick(){const vid=v();if(!vid)return;const t=vid.currentTime,d=vid.duration||11.51;const h=document.getElementById('exhead');if(h)h.style.left=(t/d*100)+'%';
+let lab='other';document.querySelectorAll('#exstrip .seg').forEach(g=>{const on=t>=+g.dataset.s&&t<+g.dataset.e;g.style.outline=on?'3px solid #fff':'none';if(on)lab=g.textContent.trim();});
+const st=document.getElementById('exstate');if(st){st.textContent=lab;st.style.color=lab==='fallen'?'#FF7A7A':lab==='fall'?'#FBBF4A':'#E9EFFB';}requestAnimationFrame(tick);}
+requestAnimationFrame(tick);
+window.exampleClip={onSlide(sec){document.querySelectorAll('video').forEach(vid=>{if(sec&&sec.contains(vid)){vid.currentTime=0;vid.play().catch(()=>{});}else vid.pause();});}};})();
+</script>
+<script>
+/* Starfield (twinkle + slow parallax), occasional shooting stars, and a sparkle burst on each slide change.
+   Everything is static when the viewer prefers reduced motion. */
+(function () {
+  const reduce = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) || /static/.test(location.search);
+  if (/static/.test(location.search)) document.documentElement.classList.add('static');
+  const sky = document.getElementById('sky');
+  const ctx = sky.getContext('2d');
+  let W = 0, H = 0, DPR = 1, stars = [], shooting = [], offset = 0, target = 0, t0 = performance.now();
+
+  // deterministic generator so every viewer sees the same sky
+  let seed = 20261025;
+  const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+  const PALETTE = ['255,255,255', '200,220,255', '170,240,230', '255,230,200', '210,190,255'];
+
+  function build() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = sky.clientWidth; H = sky.clientHeight;
+    sky.width = Math.round(W * DPR); sky.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    seed = 20261025; stars = [];
+    const n = Math.round(W * H / 2600);
+    for (let i = 0; i < n; i++) {
+      const depth = rnd();
+      stars.push({ x: rnd() * W, y: rnd() * H, r: 0.25 + Math.pow(rnd(), 3) * 1.7, d: 0.2 + depth * 0.8,
+        c: PALETTE[Math.floor(rnd() * PALETTE.length)], ph: rnd() * Math.PI * 2, sp: 0.6 + rnd() * 2.2, glare: rnd() > 0.985 });
+    }
+  }
+
+  function drawStar(s, tw, ox) {
+    let x = (s.x - ox * s.d) % W; if (x < 0) x += W;
+    const a = 0.35 + 0.65 * tw;
+    ctx.fillStyle = `rgba(${s.c},${a})`;
+    ctx.beginPath(); ctx.arc(x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+    if (s.glare) {  // bright star with a four-point glint
+      const L = 6 + 10 * tw;
+      const g = ctx.createRadialGradient(x, s.y, 0, x, s.y, L * 1.2);
+      g.addColorStop(0, `rgba(${s.c},${0.55 * a})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, s.y, L * 1.2, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = `rgba(${s.c},${0.7 * a})`; ctx.lineWidth = 0.8;
+      ctx.beginPath(); ctx.moveTo(x - L, s.y); ctx.lineTo(x + L, s.y); ctx.moveTo(x, s.y - L); ctx.lineTo(x, s.y + L); ctx.stroke();
+    }
+  }
+
+  function spawnShooting() {
+    const fromLeft = rnd() > 0.5;
+    shooting.push({ x: fromLeft ? rnd() * W * 0.5 : W * (0.5 + rnd() * 0.5), y: rnd() * H * 0.45,
+      vx: (fromLeft ? 1 : -1) * (7 + rnd() * 5), vy: 2.6 + rnd() * 2, life: 0, max: 55 + rnd() * 30 });
+  }
+
+  function frame(now) {
+    const t = (now - t0) / 1000;
+    offset += (target - offset) * 0.04;
+    ctx.clearRect(0, 0, W, H);
+    for (const s of stars) drawStar(s, reduce ? 0.8 : 0.5 + 0.5 * Math.sin(t * s.sp + s.ph), offset);
+    if (!reduce) {
+      if (rnd() < 0.006 && shooting.length < 2) spawnShooting();
+      shooting = shooting.filter(m => m.life < m.max);
+      for (const m of shooting) {
+        m.life++; m.x += m.vx; m.y += m.vy;
+        const k = 1 - m.life / m.max, tail = 18;
+        const g = ctx.createLinearGradient(m.x, m.y, m.x - m.vx * tail, m.y - m.vy * tail);
+        g.addColorStop(0, `rgba(255,255,255,${0.95 * k})`); g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.strokeStyle = g; ctx.lineWidth = 1.8; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x - m.vx * tail, m.y - m.vy * tail); ctx.stroke();
+        ctx.fillStyle = `rgba(255,255,255,${k})`; ctx.beginPath(); ctx.arc(m.x, m.y, 1.8, 0, Math.PI * 2); ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    }
+  }
+
+  // sparkle burst drawn on the stage (stage coordinates, 1600x900)
+  const sp = document.getElementById('sparks');
+  const sctx = sp.getContext('2d');
+  sp.width = 1600; sp.height = 900;
+  let parts = [], running = false;
+  function burst() {
+    if (reduce) return;
+    const cols = ['255,255,255', '94,234,212', '167,139,250', '251,191,74'];
+    for (let i = 0; i < 38; i++) {  // radiate from the eyebrow's signal dot
+      const a = -Math.PI * 0.9 + Math.random() * Math.PI * 1.3, v = 1.5 + Math.random() * 5;
+      parts.push({ x: 101, y: 83, vx: Math.cos(a) * v, vy: Math.sin(a) * v,
+        life: 0, max: 30 + Math.random() * 35, r: 0.6 + Math.random() * 1.6, c: cols[Math.floor(Math.random() * cols.length)] });
+    }
+    if (!running) { running = true; requestAnimationFrame(tick); }
+  }
+  function tick() {
+    sctx.clearRect(0, 0, 1600, 900);
+    parts = parts.filter(p => p.life < p.max);
+    for (const p of parts) {
+      p.life++; p.x += p.vx; p.y += p.vy; p.vx *= 0.96; p.vy = p.vy * 0.96 + 0.04;
+      const k = 1 - p.life / p.max, R = p.r * (1 + 2 * k);
+      sctx.fillStyle = `rgba(${p.c},${k})`;
+      sctx.beginPath(); sctx.moveTo(p.x, p.y - R * 2); sctx.lineTo(p.x + R * 0.5, p.y - R * 0.5); sctx.lineTo(p.x + R * 2, p.y);
+      sctx.lineTo(p.x + R * 0.5, p.y + R * 0.5); sctx.lineTo(p.x, p.y + R * 2); sctx.lineTo(p.x - R * 0.5, p.y + R * 0.5);
+      sctx.lineTo(p.x - R * 2, p.y); sctx.lineTo(p.x - R * 0.5, p.y - R * 0.5); sctx.closePath(); sctx.fill();
+    }
+    if (parts.length) requestAnimationFrame(tick); else { running = false; sctx.clearRect(0, 0, 1600, 900); }
+  }
+
+  window.addEventListener('resize', () => { build(); if (reduce) frame(performance.now()); });
+  build(); requestAnimationFrame(frame);
+  window.spaceFx = { onSlide(i) { target = i * 60; burst(); } };
+})();
+
+</script>
+<script>
+(function () {
+  const C = { ink: '#E9EFFB', muted: '#95A6C4', line: 'rgba(150,182,235,0.16)', teal: '#5EEAD4', blue: '#8AB4FF', amber: '#FBBF4A', red: '#FF7A7A', grey: '#74839F', soft: 'rgba(94,234,212,0.15)' };
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; };
+  const svgIn = (id, w, h) => { const host = document.getElementById(id) || document.createElement('div'); const s = el('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': host.previousElementSibling ? host.previousElementSibling.textContent : '' }, host); return s; };
+  const fmt = v => v.toFixed(1);
+
+  // horizontal bars with optional error whiskers
+  function hbars(id, rows, max, w = 700, rowH = 52) {
+    const left = 300, h = rows.length * rowH + 24, s = svgIn(id, w, h), x = v => left + (v / max) * (w - left - 70);
+    for (let t = 0; t <= max; t += 20) { el('line', { x1: x(t), x2: x(t), y1: 0, y2: h - 20, stroke: C.line }, s); el('text', { x: x(t), y: h - 2, 'text-anchor': 'middle', 'font-size': 15, fill: C.muted }, s, t); }
+    rows.forEach((r, i) => {
+      const y = i * rowH + 8;
+      el('text', { x: left - 14, y: y + rowH / 2 - 4, 'text-anchor': 'end', 'font-size': 18, fill: C.ink, 'font-weight': r.bold ? 600 : 400 }, s, r.label);
+      el('rect', { x: left, y, width: x(r.v) - left, height: rowH - 22, rx: 4, fill: r.c }, s);
+      if (r.e) el('line', { x1: x(r.v - r.e), x2: x(r.v + r.e), y1: y + (rowH - 22) / 2, y2: y + (rowH - 22) / 2, stroke: C.ink, 'stroke-width': 2 }, s);
+      el('text', { x: x(r.v + (r.e || 0)) + 8, y: y + rowH / 2 - 4, 'font-size': 18, fill: C.ink, 'font-weight': 600 }, s, fmt(r.v));
+    });
+  }
+
+  // decay curve with W window
+  (function () {
+    const w = 900, h = 420, s = svgIn('c-decay', w, h), L = 70, R = 30, T = 20, B = 60;
+    const X = t => L + t / 12 * (w - L - R), Y = v => T + (1 - v) * (h - T - B);
+    for (let t = 0; t <= 12; t += 2) { el('line', { x1: X(t), x2: X(t), y1: T, y2: h - B, stroke: C.line }, s); el('text', { x: X(t), y: h - B + 28, 'text-anchor': 'middle', 'font-size': 16, fill: C.muted }, s, t + ' s'); }
+    [0, .5, 1].forEach(v => el('text', { x: L - 12, y: Y(v) + 5, 'text-anchor': 'end', 'font-size': 16, fill: C.muted }, s, v));
+    el('rect', { x: X(0), y: T, width: X(2.63) - X(0), height: h - T - B, fill: C.red, 'fill-opacity': .08 }, s);
+    el('text', { x: X(2.63) + 10, y: T + 22, 'font-size': 15, fill: C.red }, s, '90% ca nằm lại bắt đầu trong 2.6 s đầu');
+    const curve = (tau, W, color, dash, label, lx) => {
+      let d = ''; for (let t = 0.02; t <= W; t += 0.05) d += (d ? 'L' : 'M') + X(t) + ' ' + Y(Math.pow(2, -t / tau));
+      el('path', { d, fill: 'none', stroke: color, 'stroke-width': 3, 'stroke-dasharray': dash || '' }, s);
+      el('line', { x1: X(W), x2: X(W), y1: Y(Math.pow(2, -W / tau)), y2: Y(0), stroke: color, 'stroke-width': 2, 'stroke-dasharray': dash || '' }, s);
+      el('text', { x: lx[0], y: lx[1], 'font-size': 17, fill: color, 'font-weight': 600 }, s, label);
+    };
+    curve(4, 10, C.grey, '7 6', 'bài báo cũ: giảm chậm, kéo dài 10 s', [X(6.6), Y(0.36) - 4]);
+    curve(1, 5, C.teal, '', 'chỉnh lại: giảm nhanh, trong 5 s', [X(5.25), Y(0.03) + 6]);
+    el('text', { x: X(6), y: h - 8, 'text-anchor': 'middle', 'font-size': 16, fill: C.muted }, s, 'số giây sau cú ngã');
+  })();
+
+  // class shift: grouped horizontal bars
+  (function () {
+    const cls = ['walk', 'fall', 'fallen', 'sit_down', 'sitting', 'lie_down', 'lying', 'stand_up', 'standing', 'other'];
+    const shift = {"syn": [10.1, 11.2, 7.5, 6.9, 14.1, 6.5, 12.2, 8.8, 12.7, 10.0], "itw": [11.6, 22.7, 11.3, 0.3, 2.5, 0.4, 0.6, 9.0, 9.4, 32.2]}, syn = shift.syn, itw = shift.itw;
+    const w = 760, rowH = 40, L = 120, h = cls.length * rowH + 50, s = svgIn('c-shift', w, h), X = v => L + v / 35 * (w - L - 70);
+    [0, 10, 20, 30].forEach(t => { el('line', { x1: X(t), x2: X(t), y1: 0, y2: h - 40, stroke: C.line }, s); el('text', { x: X(t), y: h - 20, 'text-anchor': 'middle', 'font-size': 14, fill: C.muted }, s, t + '%'); });
+    cls.forEach((c, i) => {
+      const y = i * rowH + 4, cc = c === 'fall' ? C.amber : c === 'fallen' ? C.red : C.ink;
+      el('text', { x: L - 12, y: y + 24, 'text-anchor': 'end', 'font-size': 16, fill: cc, 'font-family': 'JetBrains Mono, monospace' }, s, c);
+      el('rect', { x: L, y: y + 4, width: X(syn[i]) - L, height: 13, rx: 2, fill: C.grey }, s);
+      el('rect', { x: L, y: y + 19, width: X(itw[i]) - L, height: 13, rx: 2, fill: C.teal }, s);
+      if (itw[i] > 20) el('text', { x: X(itw[i]) + 6, y: y + 31, 'font-size': 14, fill: C.teal, 'font-weight': 600 }, s, itw[i] + '%');
+    });
+    el('rect', { x: L, y: h - 12, width: 14, height: 10, fill: C.grey }, s); el('text', { x: L + 20, y: h - 3, 'font-size': 14, fill: C.muted }, s, 'Video huấn luyện');
+    el('rect', { x: L + 100, y: h - 12, width: 14, height: 10, fill: C.teal }, s); el('text', { x: L + 120, y: h - 3, 'font-size': 14, fill: C.muted }, s, 'Video thật');
+  })();
+
+  // drift scatter (real points)
+  (function () {
+    const pts = [[7.81,-0.008,0],[12.08,-0.012,0],[11.08,-0.011,0],[6.27,-0.006,0],[8.81,-0.009,0],[8.51,-0.008,0],[11.58,-0.011,0],[4.84,-0.005,0],[13.25,-0.013,0],[11.91,-0.012,0],[20.65,-0.021,0],[4.2,-0.004,0],[10.38,-0.01,0],[15.88,-0.016,0],[7.17,-0.007,0],[8.54,-0.008,0],[4.2,-0.004,0],[19.69,-0.02,0],[16.12,-0.016,0],[4.84,-0.005,0],[21.05,-0.021,0],[12.25,-0.012,0],[12.05,-0.012,0],[5.34,-0.005,0],[3.7,-0.004,0],[8.8,0.576,1],[9.92,0.65,1],[7.92,0.518,1],[3.13,0.197,1],[5.87,-0.0,0],[6.17,-0.0,0],[54.87,-0.0,0],[27.89,-0.028,0],[28.8,-0.029,0],[31.06,-0.031,0],[5.37,-0.005,0],[12.15,-0.012,0],[21.52,-0.021,0],[16.95,-0.017,0],[5.17,-0.0,0],[9.44,-0.009,0],[14.21,-0.014,0],[8.07,-0.008,0],[17.32,-0.017,0],[8.17,-0.008,0],[3.64,-0.004,0],[15.65,-0.016,0],[16.22,-0.016,0],[10.44,-0.01,0],[8.01,0.518,1],[4.63,0.296,1],[18.77,1.226,1],[5.17,0.337,1],[7.09,0.461,1],[19.43,1.276,1],[33.24,2.181,1],[18.93,1.243,1],[6.63,0.428,1],[8.91,-0.009,0],[10.24,-0.01,0],[21.05,-0.021,0],[5.73,-0.0,0],[7.47,-0.007,0],[8.64,-0.009,0],[6.54,-0.006,0],[8.98,-0.009,0],[6.14,-0.006,0],[22.36,-0.022,0],[10.74,-0.011,0],[4.54,-0.004,0],[16.08,-0.016,0],[9.48,-0.009,0],[6.92,0.453,1],[5.8,0.379,1],[9.63,0.625,1],[4.46,0.288,1],[8.05,0.527,1],[8.21,-0.008,0],[6.94,-0.007,0],[8.81,-0.009,0],[5.54,-0.005,0],[52.22,-0.052,0],[19.65,-0.02,0],[17.42,-0.017,0],[3.64,-0.004,0],[4.9,-0.005,0],[6.3,-0.0,0],[7.73,-0.0,0],[10.0,-0.0,0],[41.97,-0.0,0],[4.37,-0.0,0],[10.03,-0.0,0],[6.67,-0.0,0],[14.3,-0.0,0],[7.14,-0.007,0],[10.01,-0.01,0],[10.84,-0.011,0],[5.64,-0.006,0],[5.74,-0.006,0],[9.71,-0.01,0],[6.64,-0.007,0],[9.11,-0.009,0],[9.04,-0.009,0],[8.64,-0.009,0],[5.61,-0.005,0],[8.26,0.535,1],[4.21,0.272,1],[13.47,0.881,1],[9.42,0.617,1],[4.46,0.288,1],[8.55,0.56,1],[8.63,0.56,1],[6.88,0.444,1],[13.0,-0.0,0],[12.9,-0.0,0],[5.53,-0.0,0],[13.3,-0.0,0],[5.57,-0.0,0],[10.1,-0.0,0],[12.43,-0.0,0],[7.07,-0.0,0],[6.73,-0.0,0],[24.23,-0.0,0],[7.9,-0.0,0],[5.38,0.346,1],[9.63,0.625,1],[6.01,0.387,1],[11.22,0.732,1],[14.64,0.955,1],[8.84,-0.009,0],[31.06,-0.031,0],[25.73,-0.026,0],[9.57,-0.0,0],[5.47,-0.0,0],[7.5,-0.0,0],[9.97,-0.0,0],[8.0,-0.0,0],[8.4,-0.0,0],[7.8,-0.0,0],[5.9,-0.0,0],[7.27,-0.0,0],[3.67,-0.0,0],[9.0,-0.0,0],[13.67,-0.0,0],[12.43,-0.0,0],[12.07,-0.0,0],[7.83,-0.0,0],[22.47,-0.0,0],[8.5,-0.0,0],[9.9,-0.0,0],[5.53,-0.0,0],[6.9,-0.0,0],[5.77,-0.0,0],[14.2,-0.0,0],[6.9,-0.0,0],[8.5,-0.0,0],[23.9,-0.0,0],[7.33,-0.0,0],[7.47,-0.0,0],[4.6,-0.0,0],[20.47,-0.0,0],[5.7,-0.0,0],[21.1,-0.0,0],[12.87,-0.0,0],[18.65,-0.019,0],[3.4,-0.003,0],[8.78,-0.009,0],[12.64,0.823,1],[9.17,0.601,1],[16.85,1.103,1],[7.21,0.469,1],[9.26,0.601,1],[6.94,-0.007,0],[7.09,0.461,1],[6.71,0.436,1],[9.72,0.634,1],[11.22,0.732,1],[5.46,0.354,1],[4.21,0.272,1],[7.84,0.51,1],[4.67,0.304,1],[9.51,-0.009,0],[5.27,-0.005,0],[35.24,-0.035,0],[15.42,-0.015,0],[5.14,-0.005,0],[9.98,-0.01,0],[5.77,-0.006,0],[4.97,-0.005,0],[24.02,-0.024,0],[8.97,0.584,1],[19.89,1.3,1],[7.92,0.518,1],[5.17,0.337,1],[4.84,0.313,1],[6.84,-0.007,0],[6.94,-0.007,0],[4.07,-0.004,0],[15.08,-0.015,0],[9.78,-0.01,0],[5.04,-0.005,0],[9.91,-0.01,0],[5.81,-0.006,0],[5.01,-0.005,0],[13.31,-0.013,0],[7.37,-0.007,0],[13.31,-0.013,0],[9.91,-0.01,0],[7.81,-0.008,0],[4.1,-0.004,0],[8.97,0.584,1],[9.22,0.601,1],[7.67,0.502,1],[6.63,0.428,1],[6.21,0.403,1],[5.59,0.362,1],[8.88,0.576,1],[4.71,0.304,1],[5.11,-0.005,0],[17.75,-0.018,0],[12.58,-0.013,0],[5.97,-0.006,0],[14.01,-0.014,0],[10.94,-0.011,0],[9.08,-0.009,0],[12.31,-0.012,0],[7.84,-0.008,0],[8.88,-0.009,0],[9.18,-0.009,0],[20.39,1.333,1],[7.92,0.518,1],[4.46,0.288,1],[4.38,0.28,1],[9.38,0.609,1],[4.64,-0.005,0],[11.68,-0.012,0],[23.99,-0.024,0],[16.85,-0.017,0],[34.73,-0.035,0],[7.91,-0.008,0],[10.01,-0.01,0],[9.94,-0.01,0],[7.24,-0.007,0],[12.08,-0.012,0],[5.67,-0.006,0],[6.21,-0.006,0],[9.68,-0.01,0],[9.58,-0.009,0],[6.81,-0.007,0],[6.47,-0.006,0],[7.34,-0.007,0],[3.8,-0.0,0],[8.38,-0.008,0],[8.61,-0.009,0],[10.18,-0.01,0],[6.94,-0.007,0],[9.61,-0.009,0],[3.5,0.222,1],[7.37,-0.007,0],[36.84,-0.037,0],[3.94,-0.004,0],[8.07,-0.008,0],[9.78,-0.01,0],[12.21,-0.012,0],[10.98,-0.011,0],[6.87,-0.007,0],[11.51,-0.011,0],[4.97,-0.005,0],[7.37,-0.007,0],[8.01,-0.008,0],[3.94,-0.004,0],[14.95,-0.015,0],[6.03,-0.0,0],[17.4,-0.0,0],[6.23,-0.0,0],[26.63,-0.0,0],[8.23,-0.0,0],[9.37,-0.0,0],[12.87,-0.0,0],[6.57,-0.007,0],[7.37,-0.007,0],[26.16,-0.026,0],[10.11,-0.01,0],[7.64,-0.008,0],[7.13,-0.0,0],[6.5,-0.0,0],[13.83,-0.0,0],[7.53,-0.0,0],[14.37,-0.0,0],[12.73,-0.0,0],[17.95,-0.018,0],[17.12,-0.017,0],[20.45,-0.02,0],[14.41,-0.014,0],[9.84,-0.01,0],[17.78,-0.018,0],[14.25,-0.014,0],[23.36,-0.023,0],[35.1,-0.035,0],[6.91,-0.007,0],[13.61,-0.013,0],[22.99,-0.023,0],[11.18,0.732,1],[16.01,1.045,1],[4.92,0.321,1],[5.84,0.379,1],[5.3,0.346,1],[20.1,1.317,1],[9.22,0.601,1],[6.05,0.395,1],[8.97,0.584,1],[10.18,0.667,1],[15.51,1.012,1],[10.55,0.691,1],[5.94,-0.006,0],[3.67,-0.004,0],[3.54,-0.003,0],[5.27,-0.005,0],[7.97,-0.008,0],[5.37,-0.005,0],[7.91,-0.008,0],[15.72,-0.016,0],[12.01,-0.012,0],[8.91,-0.009,0],[14.21,-0.014,0],[7.01,-0.007,0],[9.24,-0.009,0],[9.31,-0.009,0],[20.75,-0.021,0],[11.98,-0.012,0],[6.51,-0.006,0],[5.81,-0.006,0],[6.37,-0.006,0],[9.88,-0.01,0],[7.84,-0.008,0],[8.61,-0.009,0],[8.14,-0.008,0],[8.24,-0.008,0],[9.21,-0.009,0],[10.63,0.691,1],[3.79,0.247,1],[5.8,0.379,1],[19.22,1.259,1],[10.84,-0.011,0],[12.58,-0.013,0],[4.0,-0.004,0],[11.11,-0.011,0],[10.88,-0.011,0],[9.38,-0.009,0],[15.75,-0.016,0],[27.43,-0.027,0],[15.78,-0.016,0],[11.51,-0.011,0],[24.12,-0.024,0],[16.82,-0.017,0],[4.04,-0.004,0],[9.31,-0.009,0],[5.04,-0.005,0],[4.9,-0.005,0],[12.21,-0.012,0],[8.04,-0.008,0],[4.9,-0.005,0],[6.54,-0.006,0],[8.14,-0.008,0],[15.72,-0.016,0],[6.74,-0.007,0],[5.11,-0.005,0],[6.37,-0.006,0],[11.98,-0.012,0],[7.37,-0.007,0],[6.64,-0.007,0],[4.57,-0.005,0],[18.02,-0.018,0],[5.84,-0.006,0],[9.98,-0.01,0],[10.68,-0.011,0],[5.44,-0.005,0],[8.78,-0.009,0],[17.25,-0.017,0],[52.05,-0.052,0],[14.35,-0.014,0],[12.81,-0.013,0],[10.38,-0.01,0],[4.24,-0.004,0],[21.27,1.391,1],[4.34,0.28,1],[9.61,-0.009,0],[4.8,-0.005,0],[8.58,-0.009,0],[12.41,-0.012,0],[10.01,-0.01,0],[14.01,-0.014,0],[12.45,-0.012,0],[9.78,-0.01,0],[19.92,-0.02,0],[18.75,-0.019,0],[7.11,-0.007,0],[26.26,-0.026,0],[17.75,-0.018,0],[10.53,-0.0,0],[49.4,-0.0,0],[7.8,-0.0,0],[9.18,-0.009,0],[11.21,-0.011,0],[9.41,-0.009,0],[8.41,-0.008,0],[21.64,1.415,1],[9.84,0.642,1],[16.64,1.086,1],[13.55,0.889,1],[15.01,0.979,1],[4.84,0.313,1],[4.5,0.288,1],[17.26,1.127,1],[6.34,0.411,1],[28.82,1.893,1],[9.72,0.634,1],[4.55,0.296,1],[4.46,0.288,1],[5.67,0.37,1],[7.76,0.502,1],[6.51,0.42,1],[6.13,0.395,1],[26.86,1.761,1],[11.05,0.724,1],[7.21,0.469,1],[14.51,0.946,1],[7.59,0.494,1],[11.55,0.757,1],[4.67,0.304,1],[18.02,1.177,1],[10.59,0.691,1],[9.38,0.609,1],[8.17,0.535,1],[4.92,0.321,1],[8.26,0.535,1],[17.39,1.136,1],[8.05,0.527,1],[20.18,1.325,1],[9.3,0.609,1],[7.34,0.477,1],[5.13,0.329,1],[14.72,0.963,1],[5.0,0.321,1],[12.3,0.806,1],[8.72,0.568,1],[19.56,1.284,1],[14.6,0.955,1],[12.55,-0.012,0],[29.86,-0.03,0],[8.34,-0.008,0],[5.34,-0.005,0],[8.24,-0.008,0],[43.24,-0.043,0],[13.21,-0.013,0],[11.78,-0.012,0],[10.14,-0.01,0],[5.31,-0.005,0],[11.24,-0.011,0],[15.08,-0.015,0],[8.04,-0.008,0],[31.8,-0.032,0],[12.55,-0.012,0],[11.14,-0.011,0],[5.71,-0.006,0],[8.07,-0.008,0],[9.04,-0.009,0],[6.74,-0.007,0],[10.44,-0.01,0],[17.28,-0.017,0],[8.61,-0.009,0],[8.07,-0.008,0],[4.8,-0.005,0],[5.57,-0.005,0],[11.04,-0.011,0],[9.48,-0.009,0],[26.09,-0.026,0],[13.81,-0.014,0],[27.99,-0.028,0],[28.23,-0.028,0],[7.01,-0.007,0],[13.91,-0.014,0],[7.04,-0.007,0],[5.44,-0.005,0],[9.48,-0.009,0],[10.91,-0.011,0],[10.78,-0.011,0],[5.07,-0.005,0],[4.24,-0.004,0],[6.67,-0.007,0],[5.11,-0.005,0],[10.81,-0.011,0],[5.74,-0.006,0],[9.64,-0.01,0],[10.71,-0.011,0],[18.89,-0.019,0],[6.17,-0.006,0],[16.88,-0.017,0],[15.85,-0.016,0],[9.94,-0.01,0],[4.9,-0.005,0],[3.17,0.206,1],[11.97,0.782,1],[6.01,0.387,1],[17.51,1.144,1],[4.21,0.272,1],[9.91,-0.01,0],[11.14,-0.011,0],[3.44,-0.003,0],[4.87,-0.005,0],[3.37,-0.003,0],[19.69,-0.02,0],[8.94,-0.009,0],[17.88,-0.018,0],[5.24,-0.005,0],[6.71,-0.007,0],[9.58,-0.009,0],[14.68,-0.015,0],[4.4,-0.004,0],[13.31,-0.013,0],[11.28,-0.011,0],[8.81,-0.009,0],[8.91,-0.009,0],[10.03,-0.0,0],[4.8,-0.0,0],[8.74,-0.009,0],[7.87,-0.008,0],[14.25,-0.014,0],[11.11,-0.011,0],[8.07,-0.008,0],[12.11,-0.012,0],[12.18,-0.012,0],[6.74,-0.007,0],[5.44,-0.005,0],[15.98,-0.016,0],[29.3,-0.029,0],[4.04,-0.004,0],[13.01,-0.013,0],[6.91,-0.007,0],[15.75,-0.016,0],[13.91,-0.014,0],[12.65,-0.013,0],[8.41,-0.008,0],[6.74,-0.007,0],[5.41,-0.005,0],[9.01,-0.009,0],[4.17,-0.004,0],[13.01,-0.013,0],[7.54,-0.007,0],[8.58,-0.009,0],[15.08,-0.015,0],[17.15,-0.017,0],[21.22,-0.021,0],[14.35,-0.014,0],[7.14,-0.007,0],[17.25,-0.017,0],[12.68,-0.013,0],[7.07,-0.007,0],[8.61,-0.009,0],[9.38,-0.009,0],[12.31,-0.012,0],[11.58,-0.011,0],[7.97,-0.008,0],[10.64,-0.011,0],[12.95,-0.013,0],[11.14,-0.011,0],[4.37,-0.004,0],[14.35,-0.014,0],[11.08,-0.011,0],[15.98,-0.016,0],[3.8,-0.004,0],[7.91,-0.008,0],[6.51,-0.006,0],[8.74,-0.009,0],[7.64,-0.008,0],[7.41,-0.007,0],[8.41,-0.008,0],[3.6,-0.003,0],[16.45,-0.016,0],[22.99,-0.023,0],[12.15,-0.012,0],[8.01,-0.008,0],[8.31,-0.008,0],[8.51,-0.008,0],[12.75,-0.013,0],[13.98,-0.014,0],[7.74,-0.008,0],[14.35,-0.014,0],[4.47,-0.004,0],[7.31,-0.007,0],[12.85,-0.013,0],[8.01,-0.008,0],[3.37,-0.003,0],[9.91,-0.01,0],[7.77,-0.008,0],[13.78,-0.014,0],[6.84,-0.007,0],[5.94,-0.006,0],[10.48,-0.01,0],[7.07,-0.0,0],[18.63,-0.0,0],[17.18,1.127,1],[6.46,0.42,1],[4.0,0.255,1],[13.55,0.889,1],[7.34,-0.007,0],[9.78,-0.01,0],[6.9,-0.0,0],[9.0,-0.0,0],[7.8,-0.0,0],[6.77,-0.0,0],[16.1,-0.0,0],[7.23,-0.0,0],[9.64,-0.01,0],[8.88,-0.009,0],[10.14,-0.01,0],[3.44,-0.003,0],[16.12,-0.016,0],[6.01,-0.006,0],[20.59,-0.021,0],[9.18,-0.009,0],[10.91,-0.011,0],[9.08,-0.009,0],[15.65,-0.016,0],[8.38,-0.008,0],[8.11,-0.008,0],[4.97,-0.005,0],[7.14,-0.007,0],[3.27,-0.003,0],[3.67,-0.004,0],[6.87,-0.007,0],[15.82,-0.016,0],[10.74,-0.011,0],[10.84,-0.011,0],[8.58,-0.009,0],[4.94,-0.005,0],[9.01,-0.009,0],[6.64,-0.007,0],[7.71,-0.008,0],[6.64,-0.007,0],[9.54,-0.009,0],[8.74,-0.009,0],[4.9,-0.005,0],[8.27,-0.008,0],[9.78,-0.01,0],[22.72,-0.023,0],[6.51,-0.006,0],[12.77,-0.0,0],[14.88,-0.015,0],[6.07,-0.006,0],[7.77,-0.008,0],[12.28,-0.012,0],[5.81,-0.006,0],[13.55,-0.013,0],[10.18,-0.01,0],[4.38,0.28,1],[4.38,0.28,1],[9.8,0.642,1],[6.8,0.444,1],[4.55,0.296,1],[3.5,0.222,1],[5.67,0.37,1],[4.5,0.288,1],[3.63,0.23,1],[3.63,0.23,1],[4.96,0.321,1],[9.38,0.609,1],[3.71,0.239,1],[5.87,-0.006,0],[4.94,-0.005,0],[15.82,-0.016,0],[41.78,-0.042,0],[40.04,-0.04,0],[18.15,-0.018,0],[9.68,-0.01,0],[8.34,-0.008,0],[9.44,-0.009,0],[19.05,-0.019,0],[19.95,-0.02,0],[20.92,-0.021,0],[22.79,-0.023,0],[8.64,-0.009,0],[3.0,-0.003,0],[7.42,0.486,1],[3.6,-0.003,0],[7.24,-0.007,0],[9.94,-0.01,0],[7.81,-0.008,0],[11.75,-0.012,0],[5.41,-0.005,0],[32.83,-0.033,0],[11.41,-0.011,0],[7.64,-0.008,0],[10.78,-0.011,0],[5.14,-0.005,0],[4.7,-0.005,0],[15.35,-0.015,0],[6.24,-0.006,0],[11.4,-0.0,0],[8.5,-0.0,0],[7.6,-0.0,0],[11.3,-0.0,0],[17.07,-0.0,0],[6.77,-0.0,0],[10.78,-0.011,0],[17.28,-0.017,0],[12.08,-0.012,0],[18.06,1.185,1],[6.55,0.428,1],[7.04,-0.007,0],[17.08,-0.017,0],[15.22,-0.015,0],[17.88,-0.018,0],[8.17,-0.008,0],[22.79,-0.023,0],[17.42,-0.017,0],[32.13,-0.032,0],[17.5,-0.0,0],[23.3,-0.0,0],[19.45,-0.019,0],[8.78,-0.009,0],[11.34,-0.011,0],[52.79,-0.053,0],[18.82,-0.019,0],[8.48,-0.008,0],[12.38,-0.012,0],[12.08,-0.012,0],[9.54,-0.009,0],[15.15,-0.015,0],[7.77,-0.0,0],[10.98,-0.011,0],[9.71,-0.01,0],[13.51,-0.013,0],[31.6,-0.031,0],[17.78,-0.018,0],[7.87,-0.008,0],[12.21,-0.012,0],[33.5,-0.033,0],[13.95,-0.014,0],[25.99,-0.026,0],[7.87,-0.008,0],[23.82,-0.024,0],[5.31,-0.005,0],[19.12,-0.019,0],[33.87,-0.0,0],[34.37,-0.034,0],[8.38,-0.008,0],[6.74,-0.007,0],[7.94,-0.008,0],[7.94,-0.008,0],[14.25,-0.014,0],[9.68,-0.01,0],[8.94,-0.009,0],[4.54,-0.004,0],[17.92,-0.018,0],[28.63,-0.029,0],[10.24,-0.01,0],[12.88,-0.013,0],[10.78,-0.011,0],[21.42,-0.021,0],[12.48,-0.012,0],[9.58,-0.009,0],[13.91,-0.014,0],[10.24,-0.01,0],[36.17,-0.036,0],[7.21,-0.007,0],[20.42,-0.02,0],[8.98,-0.009,0],[14.45,-0.014,0],[48.48,-0.048,0],[18.89,-0.019,0],[19.49,-0.019,0],[9.58,-0.009,0],[24.02,-0.024,0],[14.61,-0.015,0],[29.03,-0.029,0],[15.98,-0.016,0],[10.28,-0.01,0],[12.78,-0.013,0],[6.24,-0.006,0],[14.58,-0.015,0],[8.64,-0.009,0],[22.98,1.506,1],[12.43,0.815,1],[28.32,1.86,1],[11.11,-0.011,0],[11.93,0.782,1],[6.14,-0.006,0],[64.86,-0.065,0],[14.48,-0.014,0],[10.74,-0.011,0],[18.02,-0.018,0],[11.24,-0.011,0],[20.49,-0.02,0],[13.18,-0.013,0],[6.84,-0.007,0],[10.04,-0.01,0],[11.14,-0.011,0],[34.6,-0.035,0],[12.15,-0.012,0],[19.92,-0.02,0],[8.27,-0.008,0],[10.88,-0.011,0],[23.06,1.514,1],[28.5,-0.028,0],[17.05,-0.017,0],[23.87,-0.0,0],[6.96,0.453,1],[11.18,-0.011,0],[15.4,-0.0,0],[12.58,-0.013,0],[14.31,-0.014,0],[18.42,-0.018,0],[11.51,-0.011,0],[62.4,-0.062,0],[12.31,-0.012,0],[9.94,-0.01,0],[22.22,-0.022,0]];
+    const w = 900, h = 440, L = 70, R = 24, T = 16, B = 56, s = svgIn('c-drift', w, h);
+    const X = d => L + Math.min(d, 66) / 66 * (w - L - R), Y = v => T + (1 - (v + 0.1) / 2.4) * (h - T - B);
+    [0, 0.5, 1, 1.5, 2].forEach(v => { el('line', { x1: L, x2: w - R, y1: Y(v), y2: Y(v), stroke: C.line }, s); el('text', { x: L - 10, y: Y(v) + 5, 'text-anchor': 'end', 'font-size': 15, fill: C.muted }, s, v + ' s'); });
+    [0, 10, 20, 30, 40, 50, 60].forEach(d => el('text', { x: X(d), y: h - B + 26, 'text-anchor': 'middle', 'font-size': 15, fill: C.muted }, s, d + ' s'));
+    el('text', { x: (L + w - R) / 2, y: h - 6, 'text-anchor': 'middle', 'font-size': 15, fill: C.muted }, s, 'độ dài video');
+    pts.forEach(p => el('circle', { cx: X(p[0]), cy: Y(p[1]), r: p[2] ? 4.2 : 3.2, fill: p[2] ? C.red : C.grey, 'fill-opacity': p[2] ? .8 : .45 }, s));
+    el('text', { x: X(3), y: Y(1.95), 'text-anchor': 'start', 'font-size': 16, fill: C.red, 'font-weight': 600 }, s, 'video 24 khung hình/giây: lệch tăng dần');
+    el('text', { x: X(40), y: Y(0) - 12, 'font-size': 16, fill: C.muted }, s, 'video 30 khung hình/giây: không lệch');
+  })();
+
+  // random draws
+  (function () {
+    const v = [23.9, 24.3, 24.9, 23.5, 23.6, 26.0, 25.2, 25.2, 25.4, 24.7];
+    const w = 900, h = 300, L = 40, R = 40, s = svgIn('c-draws', w, h), X = x => L + (x - 22.5) / 5 * (w - L - R), y0 = 150;
+    for (let t = 23; t <= 27; t++) { el('line', { x1: X(t), x2: X(t), y1: 40, y2: 230, stroke: C.line }, s); el('text', { x: X(t), y: 262, 'text-anchor': 'middle', 'font-size': 16, fill: C.muted }, s, t); }
+    el('rect', { x: X(24.7 - 0.8), y: y0 - 34, width: X(24.7 + 0.8) - X(24.7 - 0.8), height: 68, fill: C.teal, 'fill-opacity': .1 }, s);
+    el('line', { x1: X(24.7), x2: X(24.7), y1: y0 - 44, y2: y0 + 44, stroke: C.teal, 'stroke-width': 2 }, s);
+    el('text', { x: X(24.7), y: y0 + 72, 'text-anchor': 'middle', 'font-size': 17, fill: C.teal, 'font-weight': 600 }, s, 'trung bình 24.7');
+    const seen = {};
+    v.forEach(x => { const k = x.toFixed(1); seen[k] = (seen[k] || 0) + 1; el('circle', { cx: X(x), cy: y0 - 14 + (seen[k] - 1) * 26, r: 10, fill: C.grey }, s); });
+    el('line', { x1: X(26.6), x2: X(26.6), y1: 40, y2: 230, stroke: C.red, 'stroke-width': 3, 'stroke-dasharray': '6 5' }, s);
+    el('text', { x: X(26.6), y: 30, 'text-anchor': 'middle', 'font-size': 17, fill: C.red, 'font-weight': 600 }, s, 'con số cũ: 26.6');
+  })();
+
+  // segment-level bars
+  const segRows = (k) => [
+    { label: 'Mô hình ban đầu', v: [24.7, 55.1][k], e: [0.8, 0.4][k], c: C.grey },
+    { label: 'Quy tắc (bài báo cũ)', v: [28.9, 54.0][k], c: C.grey },
+    { label: 'Quy tắc (chỉnh lại)', v: [32.0, 55.4][k], c: C.grey },
+    { label: 'Hybrid (bài báo cũ)', v: [32.8, 56.7][k], e: [1.0, 0.8][k], c: C.grey },
+    { label: 'Học thêm video thật', v: [44.1, 66.0][k], e: [2.6, 0.4][k], c: C.blue, bold: true },
+    { label: '+ nhìn đủ khung hình', v: [46.1, 66.2][k], e: [3.4, 0.5][k], c: C.blue, bold: true },
+  ];
+  hbars('c-seg-fallen', segRows(0), 60);
+  hbars('c-seg-union', segRows(1), 80);
+
+  // streaming grouped bars
+  (function () {
+    const sys = [
+      { n: 'Ban đầu', v: [31.9, 45.5, 56.8], c: C.grey },
+      { n: 'Ban đầu + Hybrid', v: [37.0, 37.2, 53.1], c: C.amber },
+      { n: 'Học thêm video thật', v: [40.8, 60.4, 67.7], c: C.blue },
+      { n: 'Hệ thống mới', v: [44.3, 62.0, 69.3], c: C.teal },
+    ];
+    const met = ['Đã ngã', 'Đang ngã', 'Ngã (gộp)'];
+    const w = 960, h = 470, L = 50, B = 70, T = 24, s = svgIn('c-stream', w, h), gw = (w - L - 20) / 3, bw = 44;
+    const Y = v => T + (1 - v / 80) * (h - T - B);
+    [0, 20, 40, 60, 80].forEach(t => { el('line', { x1: L, x2: w - 20, y1: Y(t), y2: Y(t), stroke: C.line }, s); el('text', { x: L - 10, y: Y(t) + 5, 'text-anchor': 'end', 'font-size': 15, fill: C.muted }, s, t); });
+    met.forEach((m, j) => {
+      const gx = L + j * gw + (gw - sys.length * (bw + 10)) / 2;
+      el('text', { x: L + j * gw + gw / 2, y: h - B + 32, 'text-anchor': 'middle', 'font-size': 19, fill: C.ink, 'font-weight': 600 }, s, m);
+      sys.forEach((sy, i) => {
+        const x = gx + i * (bw + 10), v = sy.v[j];
+        el('rect', { x, y: Y(v), width: bw, height: Y(0) - Y(v), rx: 3, fill: sy.c }, s);
+        el('text', { x: x + bw / 2, y: Y(v) - 8, 'text-anchor': 'middle', 'font-size': 15, fill: sy.c === C.teal ? C.teal : C.ink, 'font-weight': sy.c === C.teal ? 700 : 400 }, s, fmt(v));
+      });
+    });
+    let lx = L; sys.forEach(sy => { el('rect', { x: lx, y: h - 18, width: 14, height: 12, fill: sy.c }, s); el('text', { x: lx + 20, y: h - 7, 'font-size': 15, fill: C.muted }, s, sy.n); lx += sy.n.length * 8.6 + 52; });
+  })();
+
+  // alarm trade-off
+  (function () {
+    const series = [
+      { n: 'Hệ thống cũ', c: C.grey, p: [[0, 103.9, 44.8], [0.5, 36.6, 20.6], [1, 13.6, 9.0], [1.5, 5.1, 4.8], [2, 2.6, 3.2]] },
+      { n: 'Học thêm + đủ khung hình', c: C.blue, p: [[0, 120.1, 61.3], [0.5, 69.0, 41.6], [1, 43.5, 25.5], [1.5, 20.4, 16.8], [2, 10.2, 10.6]] },
+      { n: 'Hệ thống mới', c: C.teal, p: [[0, 163.6, 66.8], [0.5, 129.5, 51.3], [1, 69.0, 34.5], [1.5, 30.7, 21.0], [2, 23.0, 15.2]] },
+    ];
+    const w = 960, h = 470, L = 70, R = 30, T = 20, B = 62, s = svgIn('c-alarm', w, h);
+    const X = v => L + v / 170 * (w - L - R), Y = v => T + (1 - v / 70) * (h - T - B);
+    [0, 25, 50, 75, 100, 125, 150].forEach(t => { el('line', { x1: X(t), x2: X(t), y1: T, y2: h - B, stroke: C.line }, s); el('text', { x: X(t), y: h - B + 26, 'text-anchor': 'middle', 'font-size': 15, fill: C.muted }, s, t); });
+    [0, 20, 40, 60].forEach(t => el('text', { x: L - 10, y: Y(t) + 5, 'text-anchor': 'end', 'font-size': 15, fill: C.muted }, s, t + '%'));
+    el('text', { x: (L + w - R) / 2, y: h - 6, 'text-anchor': 'middle', 'font-size': 15, fill: C.muted }, s, 'số lần báo nhầm mỗi giờ');
+    series.forEach(sr => {
+      el('path', { d: sr.p.map((q, i) => (i ? 'L' : 'M') + X(q[1]) + ' ' + Y(q[2])).join(''), fill: 'none', stroke: sr.c, 'stroke-width': 3 }, s);
+      sr.p.forEach(q => { el('circle', { cx: X(q[1]), cy: Y(q[2]), r: 6, fill: sr.c }, s); el('text', { x: X(q[1]) + 9, y: Y(q[2]) - 9, 'font-size': 13, fill: C.muted, 'font-family': 'JetBrains Mono, monospace' }, s, q[0] + 's'); });
+      const last = sr.p[0];
+      el('text', { x: X(last[1]) - 10, y: Y(last[2]) - 22, 'text-anchor': 'end', 'font-size': 17, fill: sr.c, 'font-weight': 600 }, s, sr.n);
+    });
+  })();
+
+  // forest plot
+  (function () {
+    const rows = [
+      { l: 'Học thêm video thật (lần huấn luyện 1)', m: 10.1, lo: 7.5, hi: 12.7, c: C.blue },
+      { l: 'Học thêm video thật (lần 2)', m: 10.6, lo: 7.9, hi: 13.2, c: C.blue },
+      { l: 'Học thêm video thật (lần 3)', m: 9.8, lo: 7.0, hi: 12.4, c: C.blue },
+      { l: 'Hệ thống mới, chạy như camera', m: 1.7, lo: 0.6, hi: 2.7, c: C.teal },
+      { l: 'Nhìn đủ khung hình, như camera', m: 0.7, lo: 0.0, hi: 1.5, c: C.teal },
+      { l: 'Hybrid (bài báo cũ)', m: 1.6, lo: 0.0, hi: 3.1, c: C.grey },
+      { l: 'Quy tắc (bài báo cũ)', m: -0.2, lo: -1.6, hi: 1.2, c: C.grey },
+      { l: 'Hybrid, chạy như camera', m: -2.7, lo: -4.6, hi: -0.7, c: C.red },
+      { l: 'Chuỗi xác suất, như camera', m: -6.9, lo: -9.2, hi: -4.7, c: C.red },
+    ];
+    const w = 1400, rowH = 46, L = 470, R = 60, h = rows.length * rowH + 50, s = svgIn('c-forest', w, h), X = v => L + (v + 10) / 24 * (w - L - R);
+    [-10, -5, 0, 5, 10, 14].forEach(t => { el('line', { x1: X(t), x2: X(t), y1: 0, y2: h - 40, stroke: t === 0 ? C.ink : C.line, 'stroke-width': t === 0 ? 1.5 : 1 }, s); el('text', { x: X(t), y: h - 16, 'text-anchor': 'middle', 'font-size': 15, fill: C.muted }, s, (t > 0 ? '+' : '') + t); });
+    rows.forEach((r, i) => {
+      const y = i * rowH + 24;
+      el('text', { x: L - 20, y: y + 6, 'text-anchor': 'end', 'font-size': 18, fill: C.ink }, s, r.l);
+      el('line', { x1: X(r.lo), x2: X(r.hi), y1: y, y2: y, stroke: r.c, 'stroke-width': 4, 'stroke-linecap': 'round' }, s);
+      el('circle', { cx: X(r.m), cy: y, r: 8, fill: r.c }, s);
+      el('text', { x: X(r.hi) + 14, y: y + 6, 'font-size': 16, fill: C.muted, 'font-family': 'JetBrains Mono, monospace' }, s, `${r.m > 0 ? '+' : ''}${r.m.toFixed(1)} [${r.lo.toFixed(1)}, ${r.hi.toFixed(1)}]`);
+    });
+  })();
+
+  // ---- navigation & scaling ----
+  const stage = document.getElementById('stage');
+  const slides = [...stage.querySelectorAll('.slide')];
+  const parts = [...new Set(slides.map(s => s.dataset.part))];
+  const scrub = document.getElementById('scrub');
+  const bars = parts.map(p => {
+    const n = slides.filter(s => s.dataset.part === p).length;
+    const d = document.createElement('div'); d.className = 'part'; d.style.setProperty('--w', n);
+    d.innerHTML = `<div class="lbl">${p}</div><div class="bar"><i></i></div>`; scrub.appendChild(d); return d;
+  });
+  const count = document.createElement('div'); count.className = 'count'; scrub.appendChild(count);
+  let cur = 0;
+  function show(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, k) => s.classList.toggle('active', k === cur));
+    const s = slides[cur]; stage.classList.toggle('on-dark', s.classList.contains('dark'));
+    parts.forEach((p, k) => {
+      const idx = slides.filter(x => x.dataset.part === p), pos = idx.indexOf(s);
+      const before = slides.indexOf(idx[0]) < cur;
+      bars[k].classList.toggle('on', pos >= 0);
+      bars[k].querySelector('i').style.width = pos >= 0 ? ((pos + 1) / idx.length * 100) + '%' : (before ? '100%' : '0');
+    });
+    count.textContent = String(cur + 1).padStart(2, '0') + ' / ' + slides.length;
+    stage.dataset.neb = String(parts.indexOf(s.dataset.part));
+    if (window.spaceFx) window.spaceFx.onSlide(cur);
+    if (window.exampleClip) window.exampleClip.onSlide(s);
+    try { history.replaceState(null, '', '#slide-' + (cur + 1)); } catch (e) {}
+  }
+  function fit() { const sc = Math.min(window.innerWidth / 1600, window.innerHeight / 900); stage.style.transform = `scale(${sc})`; }
+  window.addEventListener('resize', fit); fit();
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); show(cur + 1); }
+    if (['ArrowLeft', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); show(cur - 1); }
+    if (e.key === 'Home') show(0); if (e.key === 'End') show(slides.length - 1);
+  });
+  document.getElementById('next').onclick = () => show(cur + 1);
+  document.getElementById('prev').onclick = () => show(cur - 1);
+  let tx = null; document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => { if (tx == null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) show(cur + (dx < 0 ? 1 : -1)); tx = null; });
+  const m = /^#slide-(\d+)$/.exec(location.hash); show(m ? +m[1] - 1 : 0);
 })();
 </script>
-</body>
-</html>
+
+</body></html>
