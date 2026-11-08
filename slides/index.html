@@ -461,7 +461,7 @@ html::view-transition{background:#2a1f17}
   function apply(n){i=n;S.forEach((s,k)=>s.classList.toggle('on',k===i));pg.textContent=(i+1)+' / '+S.length;history.replaceState(null,'','#slide-'+(i+1));countUp(S[i]);}
   let busy=0;function show(n){if(busy)return;n=Math.max(0,Math.min(S.length-1,n));if(n===i&&S[i].classList.contains('on'))return;
     document.documentElement.dataset.dir=n>i?'next':'prev';
-    if(document.startViewTransition&&!reduce){busy=1;const t=document.startViewTransition(()=>apply(n));const r=()=>busy=0;t.finished.then(r,r);setTimeout(r,1150);}else apply(n);}
+    if(document.startViewTransition&&!reduce){busy=1;const t=document.startViewTransition(()=>apply(n));const r=()=>busy=0;t.ready.catch(()=>{});t.finished.then(r,r);setTimeout(r,1150);}else apply(n);}
   addEventListener('hashchange',()=>{const m=location.hash.match(/\d+/);if(m)show(+m[0]-1);});
   function fit(){const k=Math.min(innerWidth/1920,innerHeight/1080);st.style.transform='scale('+k+')';}
   addEventListener("resize",fit);fit();apply(i);
