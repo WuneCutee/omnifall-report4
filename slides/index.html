@@ -79,17 +79,13 @@ tr.dim td{color:var(--muted)}
 .slide.on .foot{view-transition-name:foot}
 .slide.on .sun{view-transition-name:sun}
 .slide.on .dunes{view-transition-name:dunes}
-::view-transition-group(*){animation-duration:.55s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
-::view-transition-old(root){animation:.35s cubic-bezier(.4,0,1,1) both vt-out}
-::view-transition-new(root){animation:.55s cubic-bezier(0,0,.2,1) both vt-in}
-::view-transition-old(title){animation:.25s ease-in both tOut}
-::view-transition-new(title){animation:.45s .1s cubic-bezier(0,0,.2,1) both tIn}
-@keyframes vt-out{to{opacity:0;transform:translate3d(var(--dir,-40px),0,0)}}
-@keyframes vt-in{from{opacity:0;transform:translate3d(calc(var(--dir,-40px) * -1),0,0)}}
-@keyframes tOut{to{opacity:0;transform:translate3d(0,-10px,0)}}
-@keyframes tIn{from{opacity:0;transform:translate3d(0,12px,0)}}
-/* entrances: opacity + transform only (GPU) */
-.slide.on .card,.slide.on .fig,.slide.on .stop,.slide.on .eq,.slide.on tbody tr,.slide.on ol li,.slide.on .tag,.slide.on .lead{animation:rise .55s cubic-bezier(0,0,.2,1) both;animation-delay:calc(min(var(--i,0),8) * 50ms + 200ms)}
+/* morph: shared boxes glide/resize to their new place, contents cross-fade */
+::view-transition-group(*){animation-duration:.7s;animation-timing-function:cubic-bezier(.65,0,.35,1)}
+::view-transition-image-pair(*){overflow:hidden;border-radius:6px}
+::view-transition-old(*),::view-transition-new(*){height:100%;width:100%;object-fit:none;object-position:left top;animation-duration:.7s;animation-timing-function:cubic-bezier(.65,0,.35,1)}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.5s;object-fit:fill}
+/* entrances only for pieces inside boxes */
+.slide.on .stop,.slide.on tbody tr,.slide.on ol li,.slide.on .tag,.slide.on .lead{animation:rise .5s cubic-bezier(0,0,.2,1) both;animation-delay:calc(min(var(--i,0),8) * 40ms + 350ms)}
 @keyframes rise{from{opacity:0;transform:translate3d(0,18px,0)}}
 .slide.on .stop::before{animation:draw 1.4s .3s ease both;transform-origin:left}
 @keyframes draw{from{transform:scaleX(0)}}
@@ -438,6 +434,7 @@ tr.dim td{color:var(--muted)}
   S.forEach((s,i)=>{ if(!s.classList.contains('cover')){const f=document.createElement('div');f.className='foot';f.innerHTML='<span>Report 4 · OmniFall · Báo cáo tổng kết môn học</span><span>'+(i+1)+' / '+S.length+'</span>';s.appendChild(f);} });
   let i=Math.max(0,Math.min(S.length-1,(parseInt((location.hash.match(/\d+/)||[1])[0])||1)-1));
   S.forEach(s=>{['.card,.fig,.eq','.stop','tbody tr','ol li','.tag'].forEach(q=>s.querySelectorAll(q).forEach((e,k)=>e.style.setProperty('--i',k)));});
+  S.forEach(s=>s.querySelectorAll('.card,.fig,.eq,.route').forEach((e,k)=>{if(k<12)e.style.viewTransitionName='m'+k;}));
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function countUp(s){if(reduce)return;s.querySelectorAll('.num').forEach(el=>{const t=el.dataset.t||(el.dataset.t=el.textContent);if(!/^\d+(\.\d+)?$/.test(t.trim()))return;const v=parseFloat(t),d=(t.split('.')[1]||'').length,t0=performance.now();
     (function f(now){const p=Math.min(1,(now-t0)/1100),e=1-Math.pow(1-p,3);el.textContent=(v*e).toFixed(d);if(p<1)requestAnimationFrame(f);else el.textContent=t;})(t0);});}
