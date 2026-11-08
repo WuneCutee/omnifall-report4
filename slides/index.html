@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OmniFall · Báo cáo tổng kết</title>
+<title>Report 4 · OmniFall</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Be+Vietnam+Pro:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
 <style>
@@ -43,7 +43,7 @@ p{margin:0}
 .card{background:#fbf6ec;border:2px solid var(--line);border-radius:6px;padding:26px 30px;position:relative;min-width:0;display:flex;flex-direction:column;gap:12px}
 .card.st{border-top:10px solid var(--clay)}.card.sg{border-top:10px solid var(--sage)}.card.oc{border-top:10px solid var(--ochre)}.card.in{border-top:10px solid var(--indigo)}
 .k{font:600 16px var(--f-b);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-.num{font:700 92px/1 var(--f-d);color:var(--rust)}
+.num{font:700 92px/1 var(--f-d);color:var(--rust);font-variant-numeric:tabular-nums}
 .num.s{font-size:56px}
 .up{font:600 22px var(--f-m);color:var(--sage)}
 .small{font-size:22px;color:var(--muted)}
@@ -79,18 +79,18 @@ tr.dim td{color:var(--muted)}
 .slide.on .foot{view-transition-name:foot}
 .slide.on .sun{view-transition-name:sun}
 .slide.on .dunes{view-transition-name:dunes}
-::view-transition-group(*){animation-duration:.75s;animation-timing-function:cubic-bezier(.65,0,.25,1)}
-::view-transition-old(root){animation:.5s cubic-bezier(.65,0,.25,1) both vt-out}
-::view-transition-new(root){animation:.75s cubic-bezier(.65,0,.25,1) both vt-in}
-::view-transition-old(title){animation:.35s ease both blurOut}
-::view-transition-new(title){animation:.6s .12s ease both blurIn}
-@keyframes vt-out{to{opacity:0;transform:translateX(var(--dir,-60px)) scale(.98);filter:blur(4px)}}
-@keyframes vt-in{from{opacity:0;transform:translateX(calc(var(--dir,-60px) * -1)) scale(1.02);filter:blur(4px)}}
-@keyframes blurOut{to{opacity:0;filter:blur(10px);transform:translateY(-14px)}}
-@keyframes blurIn{from{opacity:0;filter:blur(10px);transform:translateY(14px)}}
-/* entrances */
-.slide.on .card,.slide.on .fig,.slide.on .stop,.slide.on .eq,.slide.on tbody tr,.slide.on ol li,.slide.on .tag,.slide.on .lead{animation:rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 70ms + 250ms)}
-@keyframes rise{from{opacity:0;transform:translateY(26px)}}
+::view-transition-group(*){animation-duration:.55s;animation-timing-function:cubic-bezier(.4,0,.2,1)}
+::view-transition-old(root){animation:.35s cubic-bezier(.4,0,1,1) both vt-out}
+::view-transition-new(root){animation:.55s cubic-bezier(0,0,.2,1) both vt-in}
+::view-transition-old(title){animation:.25s ease-in both tOut}
+::view-transition-new(title){animation:.45s .1s cubic-bezier(0,0,.2,1) both tIn}
+@keyframes vt-out{to{opacity:0;transform:translate3d(var(--dir,-40px),0,0)}}
+@keyframes vt-in{from{opacity:0;transform:translate3d(calc(var(--dir,-40px) * -1),0,0)}}
+@keyframes tOut{to{opacity:0;transform:translate3d(0,-10px,0)}}
+@keyframes tIn{from{opacity:0;transform:translate3d(0,12px,0)}}
+/* entrances: opacity + transform only (GPU) */
+.slide.on .card,.slide.on .fig,.slide.on .stop,.slide.on .eq,.slide.on tbody tr,.slide.on ol li,.slide.on .tag,.slide.on .lead{animation:rise .55s cubic-bezier(0,0,.2,1) both;animation-delay:calc(min(var(--i,0),8) * 50ms + 200ms)}
+@keyframes rise{from{opacity:0;transform:translate3d(0,18px,0)}}
 .slide.on .stop::before{animation:draw 1.4s .3s ease both;transform-origin:left}
 @keyframes draw{from{transform:scaleX(0)}}
 .slide.on .stop b{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i,0) * 140ms + 400ms)}
@@ -100,11 +100,10 @@ tr.dim td{color:var(--muted)}
 .sun{animation:spin 60s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .slide.on .dunes path:first-child{animation:drift 9s ease-in-out infinite alternate}
-@keyframes drift{to{transform:translateX(-40px)}}
-.slide::after{animation:weave 30s linear infinite}
-@keyframes weave{to{background-position:-460px 0,-460px 0,-437px 0,-437px 0,0 0}}
-.card{transition:transform .25s,box-shadow .25s}
-.card:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(90,50,20,.14)}
+@keyframes drift{to{transform:translate3d(-40px,0,0)}}
+.sun{will-change:transform}
+.card{transition:transform .25s}
+.card:hover{transform:translate3d(0,-4px,0)}
 @media (prefers-reduced-motion:reduce){*,::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important;transition:none!important}}
 .tag{display:inline-block;background:var(--wool);border:1px solid var(--line);padding:4px 12px;border-radius:30px;font-size:19px;margin:0 6px 8px 0}
 </style>
@@ -114,7 +113,7 @@ tr.dim td{color:var(--muted)}
 
 <section class="slide cover">
   <div class="sun" aria-hidden="true"></div>
-  <div class="chap">Báo cáo tổng kết môn học · 2026</div>
+  <div class="chap">Report 4 · Báo cáo tổng kết môn học · 2026</div>
   <h1 style="max-width:1300px;margin-top:40px">Phát hiện người đã ngã trong video: từ dữ liệu đến hệ thống thời gian thực</h1>
   <p class="lead" style="max-width:1100px">Kiểm tra dữ liệu, fine-tune mô hình và điều kiện hoá chuyển trạng thái trên benchmark OmniFall</p>
   <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px;font-size:26px;position:relative;z-index:1;margin-bottom:150px">
@@ -420,7 +419,7 @@ tr.dim td{color:var(--muted)}
 
 <section class="slide cover">
   <div class="sun" aria-hidden="true"></div>
-  <div class="chap">Kết thúc hành trình</div>
+  <div class="chap">Report 4 · Kết thúc hành trình</div>
   <h1 style="margin-top:60px">Cảm ơn thầy và các bạn đã lắng nghe</h1>
   <p class="lead">Rất mong nhận được câu hỏi và góp ý.</p>
   <div style="margin-top:auto;margin-bottom:150px;font-size:24px;display:flex;flex-direction:column;gap:6px;color:#d9c7a8;position:relative;z-index:1">
@@ -436,16 +435,16 @@ tr.dim td{color:var(--muted)}
 <script>
 (function(){
   const S=[...document.querySelectorAll('.slide')], st=document.getElementById('stage'), pg=document.getElementById('pg');
-  S.forEach((s,i)=>{ if(!s.classList.contains('cover')){const f=document.createElement('div');f.className='foot';f.innerHTML='<span>OmniFall · Báo cáo tổng kết môn học</span><span>'+(i+1)+' / '+S.length+'</span>';s.appendChild(f);} });
+  S.forEach((s,i)=>{ if(!s.classList.contains('cover')){const f=document.createElement('div');f.className='foot';f.innerHTML='<span>Report 4 · OmniFall · Báo cáo tổng kết môn học</span><span>'+(i+1)+' / '+S.length+'</span>';s.appendChild(f);} });
   let i=Math.max(0,Math.min(S.length-1,(parseInt((location.hash.match(/\d+/)||[1])[0])||1)-1));
   S.forEach(s=>{['.card,.fig,.eq','.stop','tbody tr','ol li','.tag'].forEach(q=>s.querySelectorAll(q).forEach((e,k)=>e.style.setProperty('--i',k)));});
   const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function countUp(s){if(reduce)return;s.querySelectorAll('.num').forEach(el=>{const t=el.dataset.t||(el.dataset.t=el.textContent);if(!/^\d+(\.\d+)?$/.test(t.trim()))return;const v=parseFloat(t),d=(t.split('.')[1]||'').length,t0=performance.now();
     (function f(now){const p=Math.min(1,(now-t0)/1100),e=1-Math.pow(1-p,3);el.textContent=(v*e).toFixed(d);if(p<1)requestAnimationFrame(f);else el.textContent=t;})(t0);});}
   function apply(n){i=n;S.forEach((s,k)=>s.classList.toggle('on',k===i));pg.textContent=(i+1)+' / '+S.length;history.replaceState(null,'','#slide-'+(i+1));countUp(S[i]);}
-  function show(n){n=Math.max(0,Math.min(S.length-1,n));if(n===i&&S[i].classList.contains('on'))return;
+  let busy=0;function show(n){if(busy)return;n=Math.max(0,Math.min(S.length-1,n));if(n===i&&S[i].classList.contains('on'))return;
     document.documentElement.style.setProperty('--dir',n>i?'-60px':'60px');
-    if(document.startViewTransition&&!reduce)document.startViewTransition(()=>apply(n));else apply(n);}
+    if(document.startViewTransition&&!reduce){busy=1;const t=document.startViewTransition(()=>apply(n));t.finished.finally(()=>busy=0);}else apply(n);}
   addEventListener('hashchange',()=>{const m=location.hash.match(/\d+/);if(m)show(+m[0]-1);});
   function fit(){const k=Math.min(innerWidth/1920,innerHeight/1080);st.style.transform='scale('+k+')';}
   addEventListener('resize',fit);fit();show(i);
