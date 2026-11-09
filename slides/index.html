@@ -216,18 +216,8 @@ ul.two li{break-inside:avoid}
 .d-src{background:#7C8BA8}.d-tr{background:#7DA6FF}.d-va{background:#FBBF4A}.d-te{background:#FF7A7A}.d-cam{background:#5EEAD4}
 .tplegend{display:flex;flex-wrap:wrap;gap:10px 28px;font:500 16px/1.3 var(--f-body);color:var(--muted)}
 .tplegend i{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:8px;vertical-align:-2px}
-.arch3{grid-template-columns:1.12fr 1.12fr .86fr;gap:30px}
-.arch .ahead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.arch h3{font-size:23px}
-.anum2{font-family:var(--f-display);font-weight:700;font-size:40px;line-height:1}
-.a1 .anum2{color:var(--ink)} .a2 .anum2{color:var(--blue)} .a3 .anum2{color:var(--teal)}
-.a2{border-color:rgba(138,180,255,.45)} .a3{border-color:rgba(94,234,212,.45)}
-.arch .tag{position:static;align-self:flex-start;margin:2px 0 4px}
-.arch .step span{font-size:16px;color:var(--muted)} .arch .step strong{color:var(--ink);font-weight:600}
-.arch .step em{font-size:13px;overflow-wrap:anywhere}
-.decay{margin-top:auto;color:var(--muted);display:flex;flex-direction:column;gap:10px;align-items:flex-start}.decay svg{width:100%;height:auto;max-height:150px}.alarmpill{font:700 16px/1 var(--f-body);background:var(--red);color:#04060E;padding:9px 18px;border-radius:99px;box-shadow:0 0 18px rgba(255,122,122,.5)}
-.archnote{margin:0;font-size:17px}
-.archsvg{width:100%;height:100%;min-height:0;display:block}
+.archwrap{flex:1;min-height:0;min-width:0;position:relative}
+.archsvg{position:absolute;inset:0;width:100%;height:100%;display:block}
 .archsvg text{font-family:var(--f-body)}
 </style>
 
@@ -419,8 +409,229 @@ ul.two li{break-inside:avoid}
 <section class="slide" data-part="Phương pháp">
   <div class="eyebrow">Kiến trúc chi tiết</div>
   <h2 style="font-size:42px">Bên trong mô hình: từ 16 ảnh đến một cảnh báo</h2>
-  <div class="pipe arch3"><div class="stagecol arch a1"><div class="ahead"><div><div class="kicker">Tầng 1 · nhìn</div><h3>VideoMAE-Base</h3></div><div class="anum2">86M</div></div><div class="tag tg">đóng băng</div><div class="step"><b>01</b><span><strong>Lấy 16 ảnh</strong> cách nhau 0.133 s theo thời gian thật → một đoạn ≈ 2.1 s.<em>16 × 3 × 224 × 224</em></span></div><div class="step"><b>02</b><span><strong>Cắt thành khối</strong> mỗi khối = 2 ảnh × 16×16 px, đổi thành 768 số, cộng mã vị trí.<em>8 × 14 × 14 = 1568 khối → [1568 × 768]</em></span></div><div class="step"><b>03</b><span><strong>12 lớp Transformer</strong> các khối "nhìn" nhau cả trong ảnh lẫn qua thời gian (12 đầu chú ý).<em>[1568 × 768] → [1568 × 768]</em></span></div><div class="step"><b>04</b><span><strong>Gộp thành 1 vector</strong> lấy trung bình 1568 khối; làm cho 3 góc trái/giữa/phải rồi lấy trung bình.<em>→ [768]  · mô tả "2 s này có chuyển động gì"</em></span></div></div><div class="stagecol arch a2"><div class="ahead"><div><div class="kicker">Tầng 2 · hiểu diễn biến</div><h3>Transformer thời gian</h3></div><div class="anum2">14.8M</div></div><div class="tag tb">fine-tune</div><div class="step"><b>05</b><span><strong>Ghép 18 vector</strong> cửa sổ trượt 0.133 s; 18 vector liên tiếp phủ ≈ 4.4 s.<em>[18 × 768]</em></span></div><div class="step"><b>06</b><span><strong>Chiếu + mã thời gian</strong> Linear + LayerNorm, cộng mã sin/cos để biết thứ tự trước/sau.<em>0.6M tham số</em></span></div><div class="step"><b>07</b><span><strong>Encoder × 2 lớp</strong> mỗi lớp: self-attention 8 đầu (mỗi vector xem 17 vector còn lại) → FFN 768→3072→768, có nối tắt.<em>2 × 7.1M  (attention 2.4M + FFN 4.7M)</em></span></div><div class="step"><b>08</b><span><strong>Chấm điểm</strong> trung bình 18 → 1 rồi Linear ra điểm 10 hành động.<em>[768] → [10]</em></span></div></div><div class="stagecol arch a3"><div class="ahead"><div><div class="kicker">Tầng 3 · quyết định</div><h3>Quy tắc + báo động</h3></div><div class="anum2">0</div></div><div class="tag tt">tune trên val</div><div class="step"><b>09</b><span><strong>Nhớ cú ngã</strong> sau khi "đang ngã" thắng, 5 s tiếp theo trộn thêm điểm "đã ngã"; trọng số giảm một nửa mỗi giây.<em>w = 2^(−Δt / 1 s),  0 < Δt ≤ 5 s</em></span></div><div class="step"><b>10</b><span><strong>Báo động</strong> "đang ngã / đã ngã" giữ liên tục ≥ 1 s thì bật BÁO ĐỘNG.<em>NORMAL → FALL → FALLEN → ALARM</em></span></div><div class="decay"><svg viewBox="0 0 240 140" role="img" aria-label="Trọng số cộng thêm giảm dần trong 5 giây"><line x1="10" y1="112" x2="232" y2="112" stroke="currentColor" stroke-opacity=".35"/><path d="M10 14 L14.4 20.4 L18.8 26.4 L23.2 32.0 L27.6 37.2 L32.0 42.1 L36.4 46.7 L40.8 50.9 L45.2 54.9 L49.6 58.6 L54.0 62.0 L58.4 65.2 L62.8 68.2 L67.2 71.0 L71.6 73.6 L76.0 76.1 L80.4 78.3 L84.8 80.5 L89.2 82.4 L93.6 84.3 L98.0 86.0 L102.4 87.6 L106.8 89.1 L111.2 90.5 L115.6 91.8 L120.0 93.0 L124.4 94.2 L128.8 95.2 L133.2 96.2 L137.6 97.1 L142.0 98.0 L146.4 98.8 L150.8 99.6 L155.2 100.3 L159.6 100.9 L164.0 101.5 L168.4 102.1 L172.8 102.6 L177.2 103.1 L181.6 103.6 L186.0 104.0 L190.4 104.4 L194.8 104.8 L199.2 105.1 L203.6 105.5 L208.0 105.8 L212.4 106.0 L216.8 106.3 L221.2 106.6 L225.6 106.8 L230.0 107.0" fill="none" stroke="var(--teal)" stroke-width="3"/><text x="10" y="130" font-size="12" fill="currentColor">0 s</text><text x="232" y="130" text-anchor="end" font-size="12" fill="currentColor">5 s</text><text x="16" y="12" font-size="12" fill="var(--teal)">trọng số "đã ngã" cộng thêm</text></svg><div class="alarmpill">BÁO ĐỘNG</div></div></div></div>
-  <p class="note archnote">Ví dụ: tầng 1 thấy "người đổ xuống" ở giây 3 và "nằm" ở giây 4 · tầng 2 nối hai điều đó thành <b class="t-fall">đang ngã → đã ngã</b> (khác "nằm ngủ từ đầu") · tầng 3 giữ nhãn đủ 1 s rồi <b class="t-fallen">báo động</b>. Mỗi lần dự đoán 40–47 ms trên RTX 3070.</p>
+  <div class="archwrap"><svg viewBox="0 0 1408 600" class="archsvg" role="img" aria-label="Sơ đồ kiến trúc chi tiết"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#5EEAD4"/></marker></defs><rect x="0.5" y="0.5" width="1407" height="232" rx="16" fill="#7C8BA8" fill-opacity="0.09" stroke="rgba(124,139,168,.4)" stroke-width="1.2"/>
+<rect x="0.5" y="262" width="1000" height="337" rx="16" fill="#8AB4FF" fill-opacity="0.08" stroke="rgba(138,180,255,.5)" stroke-width="1.2"/>
+<rect x="1020" y="262" width="387.5" height="337" rx="16" fill="#5EEAD4" fill-opacity="0.08" stroke="rgba(94,234,212,.55)" stroke-width="1.2"/>
+<text x="24" y="32" font-size="20" font-weight="700" fill="#E9EFFB" text-anchor="start">TẦNG 1 · VideoMAE-Base · 86M tham số · đóng băng</text>
+<rect x="36" y="108" width="112" height="80" rx="6" fill="#16224A" stroke="#7C8BA8" stroke-width="1.2"/>
+<rect x="44" y="100" width="112" height="80" rx="6" fill="#16224A" stroke="#7C8BA8" stroke-width="1.2"/>
+<rect x="52" y="92" width="112" height="80" rx="6" fill="#16224A" stroke="#7C8BA8" stroke-width="1.2"/>
+<rect x="60" y="84" width="112" height="80" rx="6" fill="#16224A" stroke="#7C8BA8" stroke-width="1.2"/>
+<rect x="68" y="76" width="112" height="80" rx="6" fill="#16224A" stroke="#7C8BA8" stroke-width="1.2"/>
+<rect x="76" y="68" width="112" height="80" rx="6" fill="#16224A" stroke="#7C8BA8" stroke-width="1.2"/>
+<circle cx="36" cy="108" r="12" fill="#5EEAD4"/>
+<text x="36" y="113" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">1</text>
+<text x="100" y="204" font-size="16" font-weight="600" fill="#E9EFFB" text-anchor="middle">16 ảnh · 224×224</text>
+<text x="100" y="224" font-size="14" font-weight="400" fill="#A9B6D2" text-anchor="middle">7.5 ảnh/giây ≈ 2.1 s</text>
+<line x1="200" y1="130" x2="250" y2="130" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="266" y="70" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="283" y="70" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="300" y="70" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="317" y="70" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.85"/>
+<rect x="334" y="70" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.85"/>
+<rect x="351" y="70" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="368" y="70" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="266" y="87" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="283" y="87" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="300" y="87" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.85"/>
+<rect x="317" y="87" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="334" y="87" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="351" y="87" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="368" y="87" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="266" y="104" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="283" y="104" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="300" y="104" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="317" y="104" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="334" y="104" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="351" y="104" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="368" y="104" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="266" y="121" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="283" y="121" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="300" y="121" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="317" y="121" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="334" y="121" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="351" y="121" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="368" y="121" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="266" y="138" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="283" y="138" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.85"/>
+<rect x="300" y="138" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="317" y="138" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="334" y="138" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="351" y="138" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.85"/>
+<rect x="368" y="138" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="266" y="155" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="283" y="155" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="300" y="155" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.35"/>
+<rect x="317" y="155" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="334" y="155" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="351" y="155" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="368" y="155" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.85"/>
+<rect x="266" y="172" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.85"/>
+<rect x="283" y="172" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="300" y="172" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.85"/>
+<rect x="317" y="172" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.85"/>
+<rect x="334" y="172" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="351" y="172" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.50"/>
+<rect x="368" y="172" width="14" height="14" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<circle cx="266" cy="70" r="12" fill="#5EEAD4"/>
+<text x="266" y="75" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">2</text>
+<text x="325" y="204" font-size="16" font-weight="600" fill="#E9EFFB" text-anchor="middle">1.568 khối 2×16×16</text>
+<text x="325" y="224" font-size="14" font-weight="400" fill="#A9B6D2" text-anchor="middle">mỗi khối → 768 số + mã vị trí</text>
+<line x1="400" y1="130" x2="470" y2="130" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="486" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.42"/>
+<rect x="499" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.46"/>
+<rect x="512" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.51"/>
+<rect x="525" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.55"/>
+<rect x="538" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.60"/>
+<rect x="551" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.65"/>
+<rect x="564" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.69"/>
+<rect x="577" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.73"/>
+<rect x="590" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.78"/>
+<rect x="603" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.82"/>
+<rect x="616" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.87"/>
+<rect x="629" y="62" width="9" height="126" rx="2" fill="#7C8BA8" fill-opacity="0.92"/>
+<circle cx="486" cy="62" r="12" fill="#5EEAD4"/>
+<text x="486" y="67" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">3</text>
+<text x="560" y="204" font-size="16" font-weight="600" fill="#E9EFFB" text-anchor="middle">12 lớp Transformer</text>
+<text x="560" y="224" font-size="14" font-weight="400" fill="#A9B6D2" text-anchor="middle">12 đầu chú ý · không gian + thời gian</text>
+<line x1="650" y1="130" x2="720" y2="130" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="730" y="88" width="160" height="84" rx="10" fill="#16224A" stroke="#7C8BA8" stroke-width="1.2"/>
+<text x="810" y="124" font-size="18" font-weight="700" fill="#E9EFFB" text-anchor="middle">Trung bình</text>
+<text x="810" y="148" font-size="15" font-weight="400" fill="#A9B6D2" text-anchor="middle" font-family="JetBrains Mono,Consolas,monospace">1568 → 1</text>
+<circle cx="730" cy="88" r="12" fill="#5EEAD4"/>
+<text x="730" y="93" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">4</text>
+<text x="810" y="204" font-size="16" font-weight="600" fill="#E9EFFB" text-anchor="middle">Làm cho 3 góc cắt</text>
+<text x="810" y="224" font-size="14" font-weight="400" fill="#A9B6D2" text-anchor="middle">trái / giữa / phải, lấy trung bình</text>
+<line x1="900" y1="130" x2="950" y2="130" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="962" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="972" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.35"/>
+<rect x="982" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.35"/>
+<rect x="992" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.35"/>
+<rect x="1002" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.95"/>
+<rect x="1012" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="1022" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.95"/>
+<rect x="1032" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="1042" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.50"/>
+<rect x="1052" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.50"/>
+<rect x="1062" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.35"/>
+<rect x="1072" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.95"/>
+<rect x="1082" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.50"/>
+<rect x="1092" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.95"/>
+<rect x="1102" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="1112" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.50"/>
+<rect x="1122" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="1132" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.95"/>
+<rect x="1142" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="1152" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.50"/>
+<rect x="1162" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="1172" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.35"/>
+<rect x="1182" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.35"/>
+<rect x="1192" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.50"/>
+<rect x="1202" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="1212" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.50"/>
+<rect x="1222" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.35"/>
+<rect x="1232" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="1242" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.50"/>
+<rect x="1252" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.70"/>
+<rect x="1262" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.95"/>
+<rect x="1272" y="108" width="8" height="44" rx="1.5" fill="#8AB4FF" fill-opacity="0.35"/>
+<text x="1120" y="92" font-size="19" font-weight="700" fill="#E9EFFB" text-anchor="middle">vector 768 chiều</text>
+<text x="1120" y="204" font-size="16" font-weight="600" fill="#E9EFFB" text-anchor="middle">Tóm tắt 2 s chuyển động</text>
+<text x="1120" y="224" font-size="14" font-weight="400" fill="#A9B6D2" text-anchor="middle">trượt 1 ảnh (0.133 s) rồi lặp lại</text>
+<path d="M1288 130 L1385 130 L1385 247 L13 247 L13 352 L26 352" fill="none" stroke="#5EEAD4" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#ah)"/>
+<rect x="600" y="236" width="210" height="22" rx="6" fill="#0A1026"/>
+<text x="705" y="252" font-size="15" font-weight="600" fill="#5EEAD4" text-anchor="middle">ghép 18 vector liên tiếp</text>
+<text x="24" y="296" font-size="20" font-weight="700" fill="#8AB4FF" text-anchor="start">TẦNG 2 · Transformer thời gian · 14.8M tham số · fine-tune</text>
+<rect x="36" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.35"/>
+<rect x="62" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.39"/>
+<rect x="88" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.42"/>
+<rect x="114" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.46"/>
+<rect x="140" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.49"/>
+<rect x="166" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.53"/>
+<rect x="192" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.57"/>
+<rect x="218" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.60"/>
+<rect x="244" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.64"/>
+<rect x="270" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.67"/>
+<rect x="296" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.71"/>
+<rect x="322" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.75"/>
+<rect x="348" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.78"/>
+<rect x="374" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.82"/>
+<rect x="400" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.85"/>
+<rect x="426" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.89"/>
+<rect x="452" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.93"/>
+<rect x="478" y="320" width="20" height="64" rx="4" fill="#8AB4FF" fill-opacity="0.96"/>
+<circle cx="36" cy="320" r="12" fill="#5EEAD4"/>
+<text x="36" y="325" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">5</text>
+<text x="257" y="410" font-size="16" font-weight="600" fill="#E9EFFB" text-anchor="middle">18 vector ≈ 4.4 s → [18 × 768]</text>
+<line x1="506" y1="352" x2="540" y2="352" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="548" y="312" width="196" height="36" rx="8" fill="#16224A" stroke="#8AB4FF" stroke-width="1.2"/>
+<text x="646.0" y="335.25" font-size="15" font-weight="500" fill="#E9EFFB" text-anchor="middle">Linear + LayerNorm</text>
+<rect x="548" y="356" width="196" height="36" rx="8" fill="#16224A" stroke="#8AB4FF" stroke-width="1.2"/>
+<text x="646.0" y="379.25" font-size="15" font-weight="500" fill="#E9EFFB" text-anchor="middle">+ mã vị trí sin/cos</text>
+<circle cx="548" cy="312" r="12" fill="#5EEAD4"/>
+<text x="548" y="317" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">6</text>
+<line x1="748" y1="352" x2="772" y2="352" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="780" y="306" width="206" height="206" rx="12" fill="#8AB4FF" fill-opacity="0.14" stroke="#8AB4FF" stroke-width="1.5"/>
+<text x="883" y="332" font-size="17" font-weight="700" fill="#8AB4FF" text-anchor="middle">Encoder × 2 lớp</text>
+<circle cx="780" cy="306" r="12" fill="#5EEAD4"/>
+<text x="780" y="311" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">7</text>
+<rect x="794" y="342" width="178" height="28" rx="8" fill="#16224A"/>
+<text x="883.0" y="360.9" font-size="14" font-weight="500" fill="#E9EFFB" text-anchor="middle">LayerNorm</text>
+<rect x="794" y="376" width="178" height="32" rx="6" fill="#8AB4FF" fill-opacity="0.35"/>
+<text x="883" y="397" font-size="15" font-weight="500" fill="#E9EFFB" text-anchor="middle">Self-attention · 8 đầu</text>
+<rect x="794" y="414" width="178" height="28" rx="8" fill="#16224A"/>
+<text x="883.0" y="432.9" font-size="14" font-weight="500" fill="#E9EFFB" text-anchor="middle">LayerNorm</text>
+<rect x="794" y="448" width="178" height="32" rx="6" fill="#8AB4FF" fill-opacity="0.35"/>
+<text x="883" y="469" font-size="15" font-weight="500" fill="#E9EFFB" text-anchor="middle">FFN 768→3072→768</text>
+<text x="883" y="500" font-size="13" font-weight="400" fill="#A9B6D2" text-anchor="middle">nối tắt + dropout 0.1</text>
+<path d="M883 512 L883 526 L646 526 L646 540" fill="none" stroke="#5EEAD4" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="548" y="546" width="196" height="38" rx="8" fill="#16224A" stroke="#8AB4FF" stroke-width="1.2"/>
+<text x="646.0" y="570.25" font-size="15" font-weight="500" fill="#E9EFFB" text-anchor="middle">Trung bình 18 → 1</text>
+<line x1="748" y1="565" x2="772" y2="565" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+<rect x="780" y="546" width="206" height="38" rx="8" fill="#16224A" stroke="#8AB4FF" stroke-width="1.2"/>
+<text x="883.0" y="570.25" font-size="15" font-weight="500" fill="#E9EFFB" text-anchor="middle">Linear 768 → 10 lớp</text>
+<circle cx="780" cy="546" r="12" fill="#5EEAD4"/>
+<text x="780" y="551" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">8</text>
+<path d="M986 565 L1010 565 L1010 380 L1030 380" fill="none" stroke="#5EEAD4" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="30" y="448" font-size="16.5" font-weight="400" fill="#A9B6D2" text-anchor="start">Mỗi vector “nhìn” 17 vector còn lại qua self-attention:</text>
+<text x="30" y="471" font-size="16.5" font-weight="400" fill="#A9B6D2" text-anchor="start">mô hình hiểu diễn biến “đổ xuống rồi nằm im”,</text>
+<text x="30" y="494" font-size="16.5" font-weight="400" fill="#A9B6D2" text-anchor="start">khác với “đang nằm ngủ từ đầu”.</text>
+<text x="30" y="548" font-size="16" font-weight="500" fill="#E9EFFB" text-anchor="start">2 lớp × ~7.1M (attention 2.4M + FFN 4.7M)</text>
+<text x="30" y="571" font-size="16" font-weight="500" fill="#E9EFFB" text-anchor="start">+ chiếu vào 0.6M = 14.8M tham số</text>
+<text x="1040" y="296" font-size="20" font-weight="700" fill="#5EEAD4" text-anchor="start">TẦNG 3 · Quy tắc + báo động</text>
+<text x="1144" y="322" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">đi</text>
+<rect x="1152" y="312" width="12" height="11" rx="2" fill="#8AB4FF"/>
+<text x="1144" y="337" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">đang ngã</text>
+<rect x="1152" y="327" width="28" height="11" rx="2" fill="#8AB4FF"/>
+<text x="1144" y="352" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">đã ngã</text>
+<rect x="1152" y="342" width="192" height="11" rx="2" fill="#FF7A7A"/>
+<text x="1144" y="367" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">ngồi xuống</text>
+<rect x="1152" y="357" width="5" height="11" rx="2" fill="#8AB4FF"/>
+<text x="1144" y="382" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">đang ngồi</text>
+<rect x="1152" y="372" width="7" height="11" rx="2" fill="#8AB4FF"/>
+<text x="1144" y="397" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">nằm xuống</text>
+<rect x="1152" y="387" width="5" height="11" rx="2" fill="#8AB4FF"/>
+<text x="1144" y="412" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">đang nằm</text>
+<rect x="1152" y="402" width="16" height="11" rx="2" fill="#8AB4FF"/>
+<text x="1144" y="427" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">đứng dậy</text>
+<rect x="1152" y="417" width="5" height="11" rx="2" fill="#8AB4FF"/>
+<text x="1144" y="442" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">đang đứng</text>
+<rect x="1152" y="432" width="5" height="11" rx="2" fill="#8AB4FF"/>
+<text x="1144" y="457" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">khác</text>
+<rect x="1152" y="447" width="9" height="11" rx="2" fill="#8AB4FF"/>
+<circle cx="1036" cy="470" r="12" fill="#5EEAD4"/>
+<text x="1036" y="475" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">9</text>
+<text x="1054" y="475" font-size="14.5" font-weight="400" fill="#A9B6D2" text-anchor="start">Sau “đang ngã”: cộng điểm “đã ngã” trong 5 s,</text>
+<text x="1054" y="495" font-size="14.5" font-weight="400" fill="#A9B6D2" text-anchor="start">bán rã 1 s · 0 tham số học</text>
+<line x1="1044" y1="580" x2="1250" y2="580" stroke="#A9B6D2"/>
+<path d="M1044 512.0 L1048 516.6 L1052 520.8 L1056 524.8 L1060 528.5 L1064 531.9 L1068 535.1 L1072 538.1 L1076 540.9 L1080 543.6 L1084 546.0 L1088 548.3 L1092 550.4 L1096 552.4 L1100 554.2 L1104 556.0 L1108 557.6 L1112 559.1 L1116 560.5 L1120 561.8 L1124 563.0 L1128 564.1 L1132 565.2 L1136 566.2 L1140 567.1 L1144 568.0 L1148 568.8 L1152 569.5 L1156 570.2 L1160 570.9 L1164 571.5 L1168 572.1 L1172 572.6 L1176 573.1 L1180 573.6 L1184 574.0 L1188 574.4 L1192 574.8 L1196 575.1 L1200 575.4 L1204 575.8 L1208 576.0 L1212 576.3 L1216 576.5 L1220 576.8 L1224 577.0 L1228 577.2 L1232 577.4 L1236 577.6 L1240 577.7 L1244 577.9" fill="none" stroke="#5EEAD4" stroke-width="3"/>
+<text x="1044" y="595" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="start">0 s</text>
+<text x="1250" y="595" font-size="12.5" font-weight="400" fill="#A9B6D2" text-anchor="end">5 s</text>
+<rect x="1268" y="520" width="124" height="36" rx="18" fill="#FF7A7A"/>
+<text x="1330" y="544" font-size="16" font-weight="700" fill="#04060E" text-anchor="middle">BÁO ĐỘNG</text>
+<circle cx="1268" cy="520" r="12" fill="#5EEAD4"/>
+<text x="1268" y="525" font-size="14" font-weight="700" fill="#04060E" text-anchor="middle">10</text>
+<text x="1330" y="578" font-size="13.5" font-weight="400" fill="#A9B6D2" text-anchor="middle">giữ liên tục ≥ 1 s</text></svg></div>
 </section>
 
 <section class="slide" data-part="Phương pháp">
